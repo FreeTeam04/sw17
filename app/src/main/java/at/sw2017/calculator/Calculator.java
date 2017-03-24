@@ -1,5 +1,6 @@
 package at.sw2017.calculator;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,21 +9,28 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-public class Calculator extends AppCompatActivity implements OnClickListener {
+public class Calculator extends Activity implements View.OnClickListener {
 
-    Button buttonAdd = (Button) findViewById(R.id.buttonAdd);
-    Button buttonSubtract = (Button) findViewById(R.id.buttonSubtract);
-    Button buttonMultiply = (Button) findViewById(R.id.buttonMultiply);
-    Button buttonDivide = (Button) findViewById(R.id.buttonDivide);
-    Button buttonEquals = (Button) findViewById(R.id.buttonEquals);
-    Button buttonClear = (Button) findViewById(R.id.buttonClear);
+    Button buttonAdd;
+    Button buttonSubtract;
+    Button buttonMultiply;
+    Button buttonDivide;
+    Button buttonEquals;
+    Button buttonClear;
 
-    ArrayList<Button> numberButtons;
+    ArrayList<Button> numberButtons = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
+        buttonAdd = (Button) findViewById(R.id.buttonAdd);
+        buttonSubtract = (Button) findViewById(R.id.buttonSubtract);
+        buttonMultiply = (Button) findViewById(R.id.buttonMultiply);
+        buttonDivide = (Button) findViewById(R.id.buttonDivide);
+        buttonEquals = (Button) findViewById(R.id.buttonEquals);
+        buttonClear = (Button) findViewById(R.id.buttonClear);
+
 
         buttonAdd.setOnClickListener(this);
         buttonSubtract.setOnClickListener(this);

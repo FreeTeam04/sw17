@@ -50,7 +50,7 @@ public class CalculatorInstrumentedTest {
     }
 
     @Test
-    public void testInputField() {
+    public void testInputField() throws Exception {
         for (int i = 9; i >= 0; i--) {
             onView(withText(Integer.toString(i))).perform(click());
         }
