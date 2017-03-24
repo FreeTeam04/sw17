@@ -133,14 +133,14 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonFour" />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/buttonAdd"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:text="+"
         android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="+"
         app:layout_constraintBottom_toTopOf="@+id/buttonSubstract"
-        app:layout_constraintLeft_toRightOf="@+id/buttonNine"
-        android:layout_marginLeft="8dp" />
+        app:layout_constraintLeft_toRightOf="@+id/buttonNine" />
 
     <Button
         android:id="@+id/buttonEight"
