@@ -59,4 +59,8 @@ public class Calculator extends Activity implements View.OnClickListener {
     public void onClick(View v) {
 
     }
+
+    private void clearTextView() {
+        numberView.setText("0");
+    }
 }

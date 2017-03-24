@@ -57,4 +57,11 @@ public class CalculatorInstrumentedTest {
 
         onView(withText("9876543210")).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void testClearButton(){
+        onView(withText("3")).perform(click());
+        onView(withText("C")).perform(click());
+        onView(withId(R.id.textView)).check(matches(withText("0")));
+    }
 }
