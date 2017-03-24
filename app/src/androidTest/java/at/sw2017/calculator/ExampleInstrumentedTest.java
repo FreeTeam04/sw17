@@ -2,11 +2,16 @@ package at.sw2017.calculator;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.*;
+import static android.support.test.espresso.action.ViewActions.*;
+import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static org.junit.Assert.*;
 
 /**
@@ -16,6 +21,24 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+
+    @Rule
+    public ActivityTestRule<Calculator> mActivityRule = new
+            ActivityTestRule<>(Calculator.class);
+
+    @Test
+    public void testButtons() throws Exception {
+        for (int i = 0; i <= 9; i++) {
+            onView(withText(Integer.toString(i))).perform(click());
+        }
+        onView(withText("+")).perform(click());
+        onView(withText("-")).perform(click());
+        onView(withText("*")).perform(click());
+        onView(withText("/")).perform(click());
+        onView(withText("=")).perform(click());
+        onView(withText("C")).perform(click());
+    }
+
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
