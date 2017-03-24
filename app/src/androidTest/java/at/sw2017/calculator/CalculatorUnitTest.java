@@ -36,19 +36,19 @@ public class CalculatorUnitTest {
 
     @Test
     public void testDoDivision() {
-        int result = Calculations.doAddition(8,4);
+        int result = Calculations.doDivision(8,4);
         assertEquals(2, result);
     }
 
     @Test
     public void testDoDivision1() {
-        int result = Calculations.doAddition(8,0);
+        int result = Calculations.doDivision(8,0);
         assertEquals(0, result);
     }
 
     @Test
     public void testDoDivision2() {
-        int result = Calculations.doAddition(11,4);
+        int result = Calculations.doDivision(11,4);
         assertEquals(2, result);
     }
 }
