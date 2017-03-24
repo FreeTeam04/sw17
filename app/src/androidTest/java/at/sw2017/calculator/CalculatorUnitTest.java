@@ -10,8 +10,45 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class CalculatorUnitTest {
+
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
+    }
+
+    @Test
+    public void testDoAddition() {
+        int result = Calculations.doAddition(2,3);
+        assertEquals(5, result);
+    }
+
+    @Test
+    public void testDoSubtractoin() {
+        int result = Calculations.doSubtraction(7,2);
+        assertEquals(5, result);
+    }
+
+    @Test
+    public void testDoMultiplication() {
+        int result = Calculations.doMultiplication(2,3);
+        assertEquals(6, result);
+    }
+
+    @Test
+    public void testDoDivision() {
+        int result = Calculations.doAddition(8,4);
+        assertEquals(2, result);
+    }
+
+    @Test
+    public void testDoDivision1() {
+        int result = Calculations.doAddition(8,0);
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void testDoDivision2() {
+        int result = Calculations.doAddition(11,4);
+        assertEquals(2, result);
     }
 }
