@@ -75,6 +75,7 @@ public class Calculator extends Activity implements View.OnClickListener {
             case R.id.buttonEquals:
                 break;
             case R.id.buttonClear:
+                clearTextView();
                 break;
             default:
                 String recentNumber = numberView.getText().toString();
