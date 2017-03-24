@@ -30,6 +30,8 @@ public class Calculator extends AppCompatActivity implements OnClickListener {
         buttonDivide.setOnClickListener(this);
         buttonEquals.setOnClickListener(this);
         buttonClear.setOnClickListener(this);
+
+        setUpNumberButtonListener();
     }
 
     public void setUpNumberButtonListener() {
