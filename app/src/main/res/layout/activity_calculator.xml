@@ -7,159 +7,142 @@
     tools:context="at.sw2017.calculator.Calculator">
 
     <Button
-        android:id="@+id/buttonSubstract"
-        android:layout_width="80dp"
+        android:id="@+id/buttonSubtract"
+        android:layout_width="88dp"
         android:layout_height="80dp"
         android:text="-"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonMultiply"
-        app:layout_constraintLeft_toRightOf="@+id/buttonSix"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginStart="16dp"
+        tools:layout_editor_absoluteY="145dp"
+        tools:layout_editor_absoluteX="294dp" />
 
     <Button
         android:id="@+id/buttonSix"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
         android:text="6"
-        app:layout_constraintBottom_toTopOf="@+id/buttonThree"
-        app:layout_constraintLeft_toRightOf="@+id/buttonFive" />
+        tools:layout_editor_absoluteY="215dp"
+        tools:layout_editor_absoluteX="198dp" />
 
     <Button
         android:id="@+id/buttonFive"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
         android:text="5"
-        app:layout_constraintBottom_toTopOf="@+id/buttonTwo"
-        tools:layout_editor_absoluteX="110dp" />
+        tools:layout_editor_absoluteX="102dp"
+        tools:layout_editor_absoluteY="215dp" />
 
     <Button
         android:id="@+id/buttonOne"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
         android:text="1"
-        app:layout_constraintBottom_toTopOf="@+id/buttonClear"
-        app:layout_constraintRight_toLeftOf="@+id/buttonTwo" />
+        tools:layout_editor_absoluteY="309dp"
+        tools:layout_editor_absoluteX="-1dp" />
 
     <Button
         android:id="@+id/buttonMultiply"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
         android:text="*"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonDivide"
-        app:layout_constraintLeft_toRightOf="@+id/buttonThree"
-        android:layout_marginLeft="8dp" />
+        tools:layout_editor_absoluteY="317dp"
+        tools:layout_editor_absoluteX="294dp" />
 
     <Button
         android:id="@+id/buttonTwo"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
         android:text="2"
-        app:layout_constraintBottom_toTopOf="@+id/buttonZero"
-        app:layout_constraintRight_toLeftOf="@+id/buttonThree" />
+        tools:layout_editor_absoluteY="327dp"
+        android:layout_marginEnd="16dp"
+        tools:layout_editor_absoluteX="110dp" />
 
     <Button
         android:id="@+id/buttonThree"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
         android:text="3"
-        app:layout_constraintBottom_toTopOf="@+id/buttonEquals"
-        tools:layout_editor_absoluteX="198dp" />
+        tools:layout_editor_absoluteX="206dp"
+        tools:layout_editor_absoluteY="327dp" />
 
     <Button
         android:id="@+id/buttonClear"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_marginEnd="5dp"
         android:text="C"
-        app:layout_constraintRight_toLeftOf="@+id/buttonZero"
-        android:layout_marginRight="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp" />
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="415dp" />
 
     <Button
         android:id="@+id/buttonDivide"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
         android:text="/"
-        app:layout_constraintLeft_toRightOf="@+id/buttonEquals"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp" />
+        tools:layout_editor_absoluteY="423dp"
+        tools:layout_editor_absoluteX="296dp" />
 
     <Button
         android:id="@+id/buttonZero"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_marginEnd="5dp"
         android:text="0"
-        app:layout_constraintRight_toLeftOf="@+id/buttonEquals"
-        android:layout_marginRight="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp" />
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:layout_editor_absoluteY="415dp"
+        tools:layout_editor_absoluteX="110dp" />
 
     <Button
         android:id="@+id/buttonEquals"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
         android:text="="
-        tools:layout_editor_absoluteX="198dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginEnd="6dp"
+        tools:layout_editor_absoluteY="415dp"
+        tools:layout_editor_absoluteX="206dp" />
 
     <Button
         android:id="@+id/buttonFour"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginBottom="22dp"
+        android:layout_marginRight="6dp"
         android:text="4"
         app:layout_constraintBottom_toTopOf="@+id/buttonOne"
-        app:layout_constraintRight_toLeftOf="@+id/buttonFive" />
+        app:layout_constraintRight_toLeftOf="@+id/buttonFive"
+        android:layout_marginEnd="6dp" />
 
     <Button
         android:id="@+id/buttonSeven"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
         android:text="7"
-        tools:layout_editor_absoluteX="22dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonFour" />
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="65dp" />
 
     <Button
         android:id="@+id/buttonAdd"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
         android:text="+"
-        app:layout_constraintBottom_toTopOf="@+id/buttonSubstract"
-        app:layout_constraintLeft_toRightOf="@+id/buttonNine" />
+        android:layout_marginStart="16dp"
+        tools:layout_editor_absoluteY="65dp"
+        tools:layout_editor_absoluteX="286dp" />
 
     <Button
         android:id="@+id/buttonEight"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
         android:text="8"
-        app:layout_constraintLeft_toRightOf="@+id/buttonSeven"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonFive" />
+        android:layout_marginStart="6dp"
+        tools:layout_editor_absoluteY="93dp"
+        tools:layout_editor_absoluteX="110dp" />
 
     <Button
         android:id="@+id/buttonNine"
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="80dp"
         android:text="9"
-        app:layout_constraintLeft_toRightOf="@+id/buttonEight"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/buttonSix" />
+        tools:layout_editor_absoluteY="101dp"
+        tools:layout_editor_absoluteX="190dp" />
 
 </android.support.constraint.ConstraintLayout>
