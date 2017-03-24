@@ -7,7 +7,7 @@
     tools:context="at.sw2017.calculator.Calculator">
 
     <Button
-        android:id="@+id/buttonSubstract"
+        android:id="@+id/buttonSubtract"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:text="-"
