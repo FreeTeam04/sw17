@@ -93,6 +93,7 @@ gen-external-apklibs
 *.ipr
 *~
 *.swp
+*.iml
 
 # Android Patch
 
@@ -106,6 +107,7 @@ obj/
 /out/
 
 # User-specific configurations
+.idea/runConfigurations.xml
 .idea/libraries/
 .idea/.name
 .idea/compiler.xml
