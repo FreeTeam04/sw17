@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.junit.Test;
 
+import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -32,7 +33,7 @@ public class MainActivityInstrumentedTest {
             ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void testTabLayout() throws Exception {
+    public void testTabLayoutExists() throws Exception {
         onView(withId(R.id.tab_layout)).check(matches(isDisplayed()));
     }
 
@@ -40,22 +41,46 @@ public class MainActivityInstrumentedTest {
     public void testHomeTabExists() throws Exception {
         Matcher<View> matcher = allOf(withText("Home"),
                 isDescendantOfA(withId(R.id.tab_layout)));
-        onView(matcher).perform(click());
+        onView(matcher).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testTranasactionsTabExists() throws Exception {
+    public void testTransactionsTabExists() throws Exception {
         Matcher<View> matcher = allOf(withText("Transactions"),
                 isDescendantOfA(withId(R.id.tab_layout)));
-        onView(matcher).perform(click());
+        onView(matcher).check(matches(isDisplayed()));
     }
 
     @Test
     public void testReportsTabExists() throws Exception {
         Matcher<View> matcher = allOf(withText("Reports"),
                 isDescendantOfA(withId(R.id.tab_layout)));
+        onView(matcher).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testHomeTabFragmentIsDisplayed() throws Exception {
+        Matcher<View> matcher = allOf(withText("Home"),
+                isDescendantOfA(withId(R.id.tab_layout)));
         onView(matcher).perform(click());
-        onView(matcher).check(matches(not(isDisplayed())));
+        sleep(500);
+        onView(withId(R.id.fragment_home_textview)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testTransactionsTabFragmentIsDisplayed() throws Exception {
+        Matcher<View> matcher = allOf(withText("Transactions"),
+                isDescendantOfA(withId(R.id.tab_layout)));
+        onView(matcher).perform(click());
+        //onView(withId(R.layout.fragment_transactions)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testReportsTabFragmentIsDisplayed() throws Exception {
+        Matcher<View> matcher = allOf(withText("Reports"),
+                isDescendantOfA(withId(R.id.tab_layout)));
+        onView(matcher).perform(click());
+        //onView(withId(R.layout.fragment_reports)).check(matches(isDisplayed()));
     }
 
     @Test
