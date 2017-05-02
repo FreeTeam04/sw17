@@ -32,7 +32,7 @@ public class FinanceDataConnectorMockUp implements FinanceDataConnector {
         Transaction transaction1 = new Transaction(1, cal.getTime(), 1, "pseudo",100.0);
 
         cal.set(2017, 4,17);
-        Transaction transaction2 = new Transaction(2, cal.getTime(), 1, "pseudo2",-50.5);
+        Transaction transaction2 = new Transaction(2, cal.getTime(), 1, "pseudo2",-50.0);
 
         this.transactions = new ArrayList<Transaction>();
         transactions.add(transaction1);

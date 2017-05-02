@@ -25,6 +25,12 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 HomeFragment homeFragment = new HomeFragment();
                 return homeFragment;
+            case 1:
+                TransactionFragment transactionFragment = new TransactionFragment();
+                return transactionFragment;
+            case 2:
+                ReportsFragment reportsFragment = new ReportsFragment();
+                return reportsFragment;
             default:
                 HomeFragment defaultFragment = new HomeFragment();
                 return defaultFragment;

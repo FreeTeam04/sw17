@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+        implements HomeFragment.OnFragmentInteractionListener,
+        TransactionFragment.OnFragmentInteractionListener,
+        ReportsFragment.OnFragmentInteractionListener {
 
     private ViewPager viewPager;
 

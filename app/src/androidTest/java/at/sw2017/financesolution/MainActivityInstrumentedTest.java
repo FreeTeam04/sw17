@@ -84,9 +84,11 @@ public class MainActivityInstrumentedTest {
     }
 
     @Test
-    public void testButtons() throws Exception {
+    public void testAddTransactionButtonExists() throws Exception {
 
-        /*onView(withText("Add Transaction")).perform(click());
+        onView(withText("Add Transaction")).perform(click());
+
+        /*
         for (int i = 1; i <= 9; i++) {
             onView(withText(Integer.toString(i))).perform(click());
         }
