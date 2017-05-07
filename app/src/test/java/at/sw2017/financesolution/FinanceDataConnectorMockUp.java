@@ -27,21 +27,58 @@ public class FinanceDataConnectorMockUp implements FinanceDataConnector {
 
     public void setupPseudoTransactionsCase2()
     {
+        Category category = new Category("Auto",1);
+
         Calendar cal = new GregorianCalendar();
         cal.set(2017, 1,1);
-        Transaction transaction1 = new Transaction(1, cal.getTime(), 1, "pseudo",100.0);
+
+        Transaction transaction1 = new Transaction(cal.getTime(), category, "pseudo", 100.0);
 
         cal.set(2017, 4,17);
-        Transaction transaction2 = new Transaction(2, cal.getTime(), 1, "pseudo2",-50.0);
+        Transaction transaction2 = new Transaction(cal.getTime(), category, "pseudo2", -50.0);
 
-        this.transactions = new ArrayList<Transaction>();
+        this.transactions = new ArrayList<>();
         transactions.add(transaction1);
         transactions.add(transaction2);
-        
     }
 
     @Override
     public ArrayList<Transaction> getAllTransactions() {
         return this.transactions;
+    }
+
+    @Override
+    public ArrayList<Category> getAllCategories() {
+        return null;
+    }
+
+    @Override
+    public boolean createOrOpenDatabase() {
+        return false;
+    }
+
+    @Override
+    public void addTransaction(Transaction transaction) {
+
+    }
+
+    @Override
+    public void removeTransaction(Transaction transaction) {
+
+    }
+
+    @Override
+    public Date convertDBDateToDate(String ISO8601Date) {
+        return null;
+    }
+
+    @Override
+    public String convertDateToDBDate(Date date) {
+        return null;
+    }
+
+    @Override
+    public void setDatadirectory(String dataDir) {
+
     }
 }

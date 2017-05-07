@@ -1,10 +1,14 @@
 package at.sw2017.financesolution;
 
+import android.app.Application;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -39,6 +43,17 @@ public class MainActivity extends AppCompatActivity
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        try {
+            FinanceDataConnector dataConnector =  FinanceDataConnectorImpl.getInstance();
+            PackageManager m = getPackageManager();
+            String s = getPackageName();
+            PackageInfo p = m.getPackageInfo(s, 0);
+            String dataDir = p.applicationInfo.dataDir;
+            dataConnector.setDatadirectory(dataDir);
+        }   catch (PackageManager.NameNotFoundException ex) {
+            Log.d("MainActivity", ex.getMessage());
+        }
     }
 
     @Override

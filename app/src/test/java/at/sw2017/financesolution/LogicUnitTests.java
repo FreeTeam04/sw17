@@ -39,11 +39,14 @@ public class LogicUnitTests {
     public void calculateBalanceTest_2() throws Exception {
 
         FinanceDataConnectorMockUp financeDataMock = new FinanceDataConnectorMockUp();
-        financeDataMock.setupPseudoTransactionsCase2(); // empty list
+        financeDataMock.setupPseudoTransactionsCase2(); // 2 transactions +100, -50
 
         FinanceSolutionsCalculator calculator = new FinanceSolutionsCalculator(financeDataMock);
 
         assertEquals(calculator.getCurrentBalance(), 50.0, 0.0001);
 
     }
+
+
+
 }

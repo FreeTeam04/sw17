@@ -20,6 +20,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by JK on 26.04.17.
@@ -103,5 +104,15 @@ public class MainActivityInstrumentedTest {
         onView(withText("C")).perform(click());*/
 
     }
+
+    @Test
+    public void openOrCreateDatabaseTest() throws Exception {
+        FinanceDataConnector dbConnection = FinanceDataConnectorImpl.getInstance();
+
+        boolean wasSuccessful = dbConnection.createOrOpenDatabase();
+
+        assertTrue(wasSuccessful);
+    }
+
 
 }
