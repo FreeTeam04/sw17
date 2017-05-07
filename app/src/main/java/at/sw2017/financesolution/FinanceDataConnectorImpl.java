@@ -1,9 +1,11 @@
 package at.sw2017.financesolution;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -12,15 +14,31 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class FinanceDataConnectorImpl implements FinanceDataConnector {
+public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements FinanceDataConnector {
 
-    private String databaseName = "FinanceDB";
+    // Logcat tag
+    private static final String LOG = "FinanceDataConnector";
+
+    // Database Version
+    private static final int DATABASE_VERSION = 1;
+
+    // Database Name
+    private static final String DATABASE_NAME = "FinanceDB";
+
+    // Table Names
+    private static final String TABLE_TRANSACTIONS = "Transactions";
+    private static final String TABLE_CATEGORIES = "Categories";
+
+    // Common column names
     private static final String KEY_ID = "id";
+
+    // CATEGORIES Table - column names
     private static final String KEY_NAME = "name";
 
+    // TRANSACTION Table - column names
     private static final String KEY_CATEGORY_ID = "category_id";
     private static final String KEY_AMOUNT = "amount";
-    private static final String KEY_DATE = "transaction_date";
+    private static final String KEY_DATE = "date";
     private static final String KEY_DESCRIPTION = "description";
 
     private String dataDirectory = "";
@@ -30,10 +48,10 @@ public class FinanceDataConnectorImpl implements FinanceDataConnector {
         this.dataDirectory = dataDir;
     }
     // CREATE TABLE t(x INTEGER, y, z, PRIMARY KEY(x ASC));
-    private String createStatementCategory = "CREATE TABLE IF NOT EXISTS Categories(" +
+    private String createStatementCategory = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORIES + "(" +
     KEY_ID + " INTEGER, " + KEY_NAME + " TEXT, PRIMARY KEY(" + KEY_ID + " ASC));";
 
-    private String createStatementTransaction = "CREATE TABLE IF NOT EXISTS Transactions(" +
+    private String createStatementTransaction = "CREATE TABLE IF NOT EXISTS "+ TABLE_TRANSACTIONS + "(" +
             KEY_ID + " INTEGER, " +
             KEY_CATEGORY_ID + " INTEGER, " +
             KEY_DATE + " TEXT, " +
@@ -47,37 +65,83 @@ public class FinanceDataConnectorImpl implements FinanceDataConnector {
 
     private static FinanceDataConnector instance;
 
-    private FinanceDataConnectorImpl() {
-    }
-
-    public static FinanceDataConnector getInstance() {
+    public static FinanceDataConnector getInstance(Context context) {
         if (instance == null) {
-            instance = new FinanceDataConnectorImpl();
+            instance = new FinanceDataConnectorImpl(context);
         }
 
         return instance;
     }
 
-
-    @Override
-    public void addTransaction(Transaction transaction)
+    private FinanceDataConnectorImpl(Context context)
     {
-        String query = "INSERT INTO Transactions(" + KEY_CATEGORY_ID + "," + KEY_DATE + "," +
-                KEY_AMOUNT + "," + KEY_DESCRIPTION + ") VALUES (" + transaction.getCategory().getDBID() + ","
-                + "'" + this.convertDateToDBDate(transaction.getDate()) +"'," + transaction.getAmount() + ",'" +
-                transaction.getDescription() + "');";
+        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+    }
 
-        this.database.beginTransaction();
 
-        try {
-            this.database.execSQL(query);
-            this.database.setTransactionSuccessful();
-        } catch (SQLException sqlEx) {
-            Log.d("FinanaceDataConnection", sqlEx.getMessage());
-        } finally {
-            this.database.endTransaction();
-        }
+    public long createCategory(Category category) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, category.getName());
+
+        // insert row
+        long category_id = db.insert(TABLE_CATEGORIES, null, values);
+
+        return category_id;
+    }
+
+    public long createTransaction(Transaction transaction, long category_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DESCRIPTION, transaction.getDescription());
+        values.put(KEY_AMOUNT, transaction.getAmount());
+        values.put(KEY_DATE, convertDateToDBDate(transaction.getDate()));
+        values.put(KEY_CATEGORY_ID, transaction.getCategoryID());
+
+        // insert row
+        long transaction_id = db.insert(TABLE_TRANSACTIONS, null, values);
+
+        return transaction_id;
+    }
+
+    public Transaction getTransaction(long transaction_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + TABLE_TRANSACTIONS + " WHERE "
+                + KEY_ID + " = " + transaction_id;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        Transaction ts = new Transaction();
+        ts.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        ts.setAmount(c.getInt(c.getColumnIndex(KEY_AMOUNT)));
+        ts.setCategoryID(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
+        ts.setDate(convertDBDateToDate(c.getString(c.getColumnIndex(KEY_DATE))));
+
+        return ts;
+    }
+
+    public Category getCategory(long category_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_CATEGORIES + " WHERE "
+                + KEY_ID + " = " + category_id;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        Category cg = new Category();
+        cg.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        cg.setName((c.getString(c.getColumnIndex(KEY_NAME))));
+
+        return cg;
     }
 
     @Override
@@ -120,19 +184,24 @@ public class FinanceDataConnectorImpl implements FinanceDataConnector {
     }
 
     @Override
-    public boolean createOrOpenDatabase() {
-
-        database = SQLiteDatabase.openOrCreateDatabase(this.dataDirectory + "/" + databaseName, null);
-
-        // Check tables exist
+    public void onCreate(SQLiteDatabase db) {
+        // Create database tables
         database.execSQL(createStatementCategory);
         database.execSQL(createStatementTransaction);
-
-        // TEXT as ISO8601 strings ("YYYY-MM-DD HH:MM:SS.SSS").
-        return database.isOpen();
     }
 
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // on upgrade drop older tables
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
+        // create new tables
+        onCreate(db);
+    }
 
-
-
+    public void closeDB() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        if (db != null && db.isOpen())
+            db.close();
+    }
 }

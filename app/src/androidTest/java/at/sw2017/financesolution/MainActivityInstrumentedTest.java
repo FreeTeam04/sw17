@@ -1,10 +1,14 @@
 package at.sw2017.financesolution;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.test.RenamingDelegatingContext;
 import android.view.View;
 
 import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.junit.Test;
@@ -105,14 +109,8 @@ public class MainActivityInstrumentedTest {
 
     }
 
-    @Test
-    public void openOrCreateDatabaseTest() throws Exception {
-        FinanceDataConnector dbConnection = FinanceDataConnectorImpl.getInstance();
 
-        boolean wasSuccessful = dbConnection.createOrOpenDatabase();
 
-        assertTrue(wasSuccessful);
-    }
 
 
 }

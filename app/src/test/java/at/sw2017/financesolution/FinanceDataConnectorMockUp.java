@@ -52,15 +52,6 @@ public class FinanceDataConnectorMockUp implements FinanceDataConnector {
         return null;
     }
 
-    @Override
-    public boolean createOrOpenDatabase() {
-        return false;
-    }
-
-    @Override
-    public void addTransaction(Transaction transaction) {
-
-    }
 
     @Override
     public void removeTransaction(Transaction transaction) {
@@ -76,9 +67,5 @@ public class FinanceDataConnectorMockUp implements FinanceDataConnector {
     public String convertDateToDBDate(Date date) {
         return null;
     }
-
-    @Override
-    public void setDatadirectory(String dataDir) {
-
-    }
+    
 }

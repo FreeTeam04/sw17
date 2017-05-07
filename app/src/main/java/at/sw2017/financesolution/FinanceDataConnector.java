@@ -19,9 +19,7 @@ public interface FinanceDataConnector {
 
     ArrayList<Category> getAllCategories();
 
-    boolean createOrOpenDatabase();
-
-    void addTransaction(Transaction transaction);
+    // void addTransaction(Transaction transaction);
 
     void removeTransaction(Transaction transaction);
 
@@ -29,6 +27,6 @@ public interface FinanceDataConnector {
 
     String convertDateToDBDate(Date date);
 
-    void setDatadirectory(String dataDir);
+    // void setDatadirectory(String dataDir);
 
 }

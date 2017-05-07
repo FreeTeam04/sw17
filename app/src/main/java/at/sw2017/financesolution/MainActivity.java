@@ -44,16 +44,8 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        try {
-            FinanceDataConnector dataConnector =  FinanceDataConnectorImpl.getInstance();
-            PackageManager m = getPackageManager();
-            String s = getPackageName();
-            PackageInfo p = m.getPackageInfo(s, 0);
-            String dataDir = p.applicationInfo.dataDir;
-            dataConnector.setDatadirectory(dataDir);
-        }   catch (PackageManager.NameNotFoundException ex) {
-            Log.d("MainActivity", ex.getMessage());
-        }
+        // initialize data connection singleton by calling getInstance once
+        FinanceDataConnector dataConnector =  FinanceDataConnectorImpl.getInstance(this.getApplicationContext());
     }
 
     @Override
