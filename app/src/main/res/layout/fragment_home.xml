@@ -4,39 +4,39 @@
     android:layout_height="match_parent"
     tools:context="at.sw2017.financesolution.HomeFragment">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:orientation="vertical" >
+        android:paddingRight="16dp">
 
         <TextView
             android:id="@+id/frag_home_balance"
-            android:textColor="@color/colorBalance"
-            android:text="@string/balance_placeholder"
-            android:textSize="32sp"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="@string/balance_placeholder"
+            android:textColor="@color/colorBalance"
+            android:textSize="32sp" />
 
         <TextView
             android:id="@+id/frag_home_balance_text"
-            android:textColor="@color/colorBalance"
-            android:text="@string/balance_text"
-            android:textSize="14sp"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/balance_text"
+            android:textColor="@color/colorBalance"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/frag_home_btn_add_transaction"
-            android:text="@string/btn_add_transaction"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="@string/btn_add_transaction" />
 
         <ListView
             android:id="@+id/frag_home_transaction_listview"
@@ -48,8 +48,7 @@
             android:cacheColorHint="@android:color/transparent"
             android:divider="@color/colorListViewDivider"
             android:dividerHeight="1dp"
-            android:paddingLeft="2dp" >
-        </ListView>
+            android:paddingLeft="2dp"></ListView>
 
     </LinearLayout>
 </FrameLayout>

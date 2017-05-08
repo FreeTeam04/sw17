@@ -69,7 +69,7 @@ public class MainActivityInstrumentedTest {
                 isDescendantOfA(withId(R.id.tab_layout)));
         onView(matcher).perform(click());
         sleep(500);
-        onView(withId(R.id.fragment_home_textview)).check(matches(isDisplayed()));
+        onView(withId(R.id.frag_home_balance_text)).check(matches(isDisplayed()));
     }
 
     @Test
