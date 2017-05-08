@@ -1,7 +1,9 @@
 <resources>
-    <string name="app_name">Finance Solution</string>
+    <string name="app_name">FinanceSolution</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="balance_placeholder">1234,50 €</string>
     <string name="balance_text">Balance</string>
     <string name="btn_add_transaction">Add Transaction</string>
+    <string name="title_activity_add_transaction">AddTransactionActivity</string>
+    <string name="add_transaction_text">Add Transaction</string>
 </resources>

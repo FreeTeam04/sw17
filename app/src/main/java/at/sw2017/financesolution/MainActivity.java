@@ -1,6 +1,7 @@
 package at.sw2017.financesolution;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity
         implements HomeFragment.OnFragmentInteractionListener,
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity
 
         // initialize data connection singleton by calling getInstance once
         FinanceDataConnector dataConnector =  FinanceDataConnectorImpl.getInstance(this.getApplicationContext());
+
+
     }
 
     @Override
