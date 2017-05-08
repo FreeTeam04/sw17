@@ -42,7 +42,10 @@ public class MainActivity extends AppCompatActivity
         PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        // use this to make it work with swiping AND clicking tabs
+        tabLayout.setupWithViewPager(viewPager);
+
 
         // initialize data connection singleton by calling getInstance once
         FinanceDataConnector dataConnector =  FinanceDataConnectorImpl.getInstance(this.getApplicationContext());
