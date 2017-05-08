@@ -44,6 +44,21 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
+    public CharSequence getPageTitle(int position) {
+
+        switch (position) {
+            case 0:
+                return "Home";
+            case 1:
+                return "Transactions";
+            case 2:
+                return "Reports";
+            default:
+                return null;
+        }
+    }
+
+    @Override
     public int getCount() {
         return mNumOfTabs;
     }
