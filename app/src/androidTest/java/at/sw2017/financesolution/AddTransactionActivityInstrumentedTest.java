@@ -50,11 +50,6 @@ public class AddTransactionActivityInstrumentedTest {
     }
 
     @Test
-    public void testSignButtonExists() throws Exception {
-        onView(withId(R.id.sign)).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void testEditAmountExists() throws Exception {
         onView(withId(R.id.editAmount)).check(matches(isDisplayed()));
     }
@@ -84,11 +79,6 @@ public class AddTransactionActivityInstrumentedTest {
         onView(withId(R.id.editDescription))
                 .check(matches(withText(TEXT)));
     }
-    
 
-    @Test
-    public void testSaveButton() throws Exception {
-        onView(withText("Save")).perform(click());
-    }
 }
 
