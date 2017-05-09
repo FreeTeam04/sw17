@@ -1,5 +1,7 @@
 package at.sw2017.financesolution;
 
+import at.sw2017.financesolution.helper.FinanceDataConnector;
+
 /**
  * Created by hannes on 26.04.17.
  */

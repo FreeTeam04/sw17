@@ -1,13 +1,10 @@
-package at.sw2017.financesolution;
+package at.sw2017.financesolution.helper;
 
-import android.util.Log;
-
-import java.text.DateFormat;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import at.sw2017.financesolution.models.Category;
+import at.sw2017.financesolution.models.Transaction;
 
 /**
  * Created by hannes on 26.04.17.

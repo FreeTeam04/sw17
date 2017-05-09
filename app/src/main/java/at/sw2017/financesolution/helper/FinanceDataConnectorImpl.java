@@ -1,9 +1,8 @@
-package at.sw2017.financesolution;
+package at.sw2017.financesolution.helper;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -14,8 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+
+import at.sw2017.financesolution.models.Category;
+import at.sw2017.financesolution.models.Transaction;
 
 public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements FinanceDataConnector {
 
