@@ -62,6 +62,11 @@ public class FinanceDataConnectorMockUp implements FinanceDataConnector {
     }
 
     @Override
+    public void createInitialCategories() {
+
+    }
+
+    @Override
     public Date convertDBDateToDate(String ISO8601Date) {
         return null;
     }
