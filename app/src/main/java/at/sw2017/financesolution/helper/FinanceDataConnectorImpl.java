@@ -109,7 +109,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         return category_id;
     }
 
-    public long createTransaction(Transaction transaction, long category_id) {
+    public long createTransaction(Transaction transaction) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -245,7 +245,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             cursor.moveToNext();
         }
 
-        return null;
+        return categoriesList;
     }
 
     @Override

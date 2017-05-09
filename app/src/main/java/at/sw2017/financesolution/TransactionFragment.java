@@ -17,6 +17,10 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import at.sw2017.financesolution.helper.FinanceDataConnector;
+import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
+import at.sw2017.financesolution.models.Transaction;
+
 
 /**
  * A simple {@link Fragment} subclass.

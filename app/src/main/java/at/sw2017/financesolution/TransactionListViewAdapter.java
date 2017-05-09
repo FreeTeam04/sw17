@@ -11,6 +11,8 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import at.sw2017.financesolution.models.Transaction;
+
 /**
  * Created by jk on 09.05.17.
  */
