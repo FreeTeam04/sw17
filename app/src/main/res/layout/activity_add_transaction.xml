@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/add_transaction_activity_layout"
     android:orientation="vertical"
     android:layout_height="match_parent"
@@ -15,5 +17,23 @@
         android:paddingBottom="2dp">
 
     </TextView>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="297dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Save"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="427dp" />
+    </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
