@@ -1,5 +1,6 @@
 package at.sw2017.financesolution;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -92,6 +93,8 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         long id = dataConnector.createTransaction(newTransaction);
         Log.i(LOG_ADD_TRANSACTION, "Added new Transaction to db (id = " + id + ").");
+        
+        this.finish();
     }
 
 }

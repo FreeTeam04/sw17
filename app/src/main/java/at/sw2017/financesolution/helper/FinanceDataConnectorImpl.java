@@ -192,17 +192,27 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     public ArrayList<Transaction> getAllTransactions() {
         //throw new UnsupportedOperationException("Not implemented.");
 
-        //TODO:
-        ArrayList<Transaction> transactionArrayList = new ArrayList<Transaction>();
+        String selectQuery = "SELECT * FROM " + TABLE_TRANSACTIONS + ";";
+        Cursor cursor = this.getReadableDatabase().rawQuery(selectQuery, null);
 
-        Category cat = new Category("TestCat", 1);
+        ArrayList<Transaction> transactionsList = new ArrayList<Transaction>();
+        cursor.moveToNext();
+        while(!cursor.isAfterLast()) {
+            Transaction transaction = new Transaction();
+            transaction.setDate(convertDBDateToDate(cursor.getString(cursor.getColumnIndex(KEY_DATE))));
+            transaction.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
+            transaction.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
+            transaction.setAmount(cursor.getDouble(cursor.getColumnIndex(KEY_AMOUNT)));
+            transaction.setCategoryID(cursor.getLong(cursor.getColumnIndex(KEY_CATEGORY_ID)));
 
-        Transaction t = new Transaction(new Date(), cat, "A Test 1", 10.00);
-        transactionArrayList.add(t);
-        t = new Transaction(new Date(), cat, "B Test 2", 129.00);
-        transactionArrayList.add(t);
+            Category category = getCategory(transaction.getCategoryID());
+            transaction.setCategory(category);
 
-        return transactionArrayList;
+            transactionsList.add(transaction);
+            cursor.moveToNext();
+        }
+
+        return transactionsList;
     }
 
     public ArrayList<Transaction> getLastTransactions(int number) {
@@ -223,21 +233,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             cursor.moveToNext();
         }
 
-
-        //TODO remove
-        ArrayList<Transaction> dummytransactionsList = new ArrayList<Transaction>();
-
-        for(int i = 0; i < number; i++) {
-            Transaction transaction = new Transaction();
-            transaction.setDate(new Date());
-            transaction.setId(i);
-            transaction.setDescription("test" + i);
-            transaction.setAmount(10.00);
-            transaction.setCategoryID(1);
-            dummytransactionsList.add(transaction);
-        }
-        
-        return dummytransactionsList;
+        return transactionsList;
     }
 
 

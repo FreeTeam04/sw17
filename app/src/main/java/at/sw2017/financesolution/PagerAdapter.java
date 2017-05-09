@@ -25,7 +25,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                HomeFragment homeFragment = new HomeFragment();
+                HomeFragment homeFragment =  new HomeFragment();
                 Log.i(LOG_INFO_TAG, "Switched to home fragment.");
                 return homeFragment;
             case 1:

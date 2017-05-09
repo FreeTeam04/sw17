@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +37,7 @@ public class TransactionFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FinanceDataConnector financeDataConnector;
 
     public EditText transactionSearchField;
     public ListView transactionListView;
@@ -72,10 +71,6 @@ public class TransactionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -85,7 +80,7 @@ public class TransactionFragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_transaction, container, false);
 
-        FinanceDataConnector financeDataConnector = FinanceDataConnectorImpl.getInstance(getActivity().getApplicationContext());
+        financeDataConnector = FinanceDataConnectorImpl.getInstance(getActivity().getApplicationContext());
 
         transactionListView = (ListView) fragmentView.findViewById(R.id.transaction_list_view);
         ArrayList<Transaction> transactionList = financeDataConnector.getAllTransactions();
@@ -141,6 +136,13 @@ public class TransactionFragment extends Fragment {
         mListener = null;
     }
 
+    public void refreshAdapter() {
+        ArrayList<Transaction> transactionList = financeDataConnector.getAllTransactions();
+        transactionListViewAdapter = new TransactionListViewAdapter(getActivity(), transactionList);
+        transactionListView.setAdapter(transactionListViewAdapter);
+        transactionListView.invalidate();
+        this.transactionListViewAdapter.notifyDataSetChanged();
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -154,5 +156,12 @@ public class TransactionFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("TransactionFragment", "onResume() called.");
+        this.refreshAdapter();
     }
 }

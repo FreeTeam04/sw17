@@ -2,18 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:divider="@drawable/divider"
     android:showDividers="middle"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <!-- Date, Category, Description, Amount -->
     <TextView android:id="@+id/row_date_text_view"
         android:text="14.04.2017"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:layout_weight="1"/>
+        android:layout_weight="0.25"/>
 
     <View    android:layout_width="1dp"
         android:layout_height="wrap_content"
@@ -21,12 +22,13 @@
 
     <TextView
         android:id="@+id/row_category_text_view"
+        android:width="0dp"
         android:text="Food"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:layout_weight="1"/>
+        android:layout_weight="0.3"/>
 
     <View    android:layout_width="1dp"
         android:layout_height="wrap_content"
@@ -35,11 +37,11 @@
     <TextView
         android:id="@+id/row_description_text_view"
         android:text="Spar"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:layout_weight="1"/>
+        android:layout_weight="0.3"/>
 
     <View    android:layout_width="1dp"
         android:layout_height="wrap_content"
@@ -48,9 +50,9 @@
     <TextView
         android:id="@+id/row_amount_text_view"
         android:text="-38.39€"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:layout_weight="1"/>
+        android:layout_weight="0.2"/>
 </LinearLayout>

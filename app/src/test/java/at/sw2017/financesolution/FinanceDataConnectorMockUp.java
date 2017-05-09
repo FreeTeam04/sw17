@@ -72,6 +72,11 @@ public class FinanceDataConnectorMockUp implements FinanceDataConnector {
     }
 
     @Override
+    public ArrayList<Transaction> getLastTransactions(int number) {
+        return null;
+    }
+
+    @Override
     public void createInitialCategories() {
 
     }
