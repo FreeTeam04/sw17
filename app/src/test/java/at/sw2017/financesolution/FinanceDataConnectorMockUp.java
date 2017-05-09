@@ -46,6 +46,16 @@ public class FinanceDataConnectorMockUp implements FinanceDataConnector {
     }
 
     @Override
+    public long createCategory(Category category) {
+        return 0;
+    }
+
+    @Override
+    public long createTransaction(Transaction transaction) {
+        return 0;
+    }
+
+    @Override
     public ArrayList<Transaction> getAllTransactions() {
         return this.transactions;
     }
