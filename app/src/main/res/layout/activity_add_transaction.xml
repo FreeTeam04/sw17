@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/add_transaction_activity_layout"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <TextView android:id="@+id/add_transaction_header"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/add_transaction_text"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/colorWhite"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp">
+
+    </TextView>
+
+</LinearLayout>
