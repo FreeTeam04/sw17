@@ -52,7 +52,13 @@ public class MainActivity extends AppCompatActivity
         // initialize data connection singleton by calling getInstance once
         FinanceDataConnector dataConnector =  FinanceDataConnectorImpl.getInstance(this.getApplicationContext());
 
+        this.test();
+    }
 
+
+    private void test(){
+        FinanceDataConnector dataConnector =  FinanceDataConnectorImpl.getInstance(this.getApplicationContext());
+        dataConnector.getAllCategories();
     }
 
     @Override
