@@ -5,10 +5,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
+import at.sw2017.financesolution.models.Transaction;
 
 
 /**
@@ -78,6 +88,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        final ListView transactionListView = (ListView) view.findViewById(R.id.frag_home_transaction_listview);
+        List<Transaction> transactionList = FinanceDataConnectorImpl.getInstance(getContext()).getLastTransactions(5);
+
+        //TODO use right adapter
+        //ArrayAdapter<Transaction> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.transaction_list_row, transactionList);
+
+        //transactionListView.setAdapter(arrayAdapter);
 
         return view;
     }

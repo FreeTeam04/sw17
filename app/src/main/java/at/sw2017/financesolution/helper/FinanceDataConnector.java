@@ -1,5 +1,6 @@
 package at.sw2017.financesolution.helper;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -21,6 +22,8 @@ public interface FinanceDataConnector {
     // void addTransaction(Transaction transaction);
 
     void removeTransaction(Transaction transaction);
+
+    ArrayList<Transaction> getLastTransactions(int number);
 
     Date convertDBDateToDate(String ISO8601Date);
 

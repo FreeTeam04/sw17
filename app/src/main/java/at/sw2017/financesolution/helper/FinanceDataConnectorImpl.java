@@ -193,6 +193,41 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         throw new UnsupportedOperationException("Not implemented.");
     }
 
+    public ArrayList<Transaction> getLastTransactions(int number) {
+
+        String selectQuery = "SELECT * FROM " + TABLE_TRANSACTIONS + " LIMIT " + number + ";";
+        Cursor cursor = this.getReadableDatabase().rawQuery(selectQuery, null);
+
+        ArrayList<Transaction> transactionsList = new ArrayList<Transaction>();
+        cursor.moveToNext();
+        while(!cursor.isAfterLast()) {
+            Transaction transaction = new Transaction();
+            transaction.setDate(convertDBDateToDate(cursor.getString(cursor.getColumnIndex(KEY_DATE))));
+            transaction.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
+            transaction.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
+            transaction.setAmount(cursor.getDouble(cursor.getColumnIndex(KEY_AMOUNT)));
+            transaction.setCategoryID(cursor.getLong(cursor.getColumnIndex(KEY_CATEGORY_ID)));
+            transactionsList.add(transaction);
+            cursor.moveToNext();
+        }
+
+
+        //TODO remove
+        ArrayList<Transaction> dummytransactionsList = new ArrayList<Transaction>();
+
+        for(int i = 0; i < number; i++) {
+            Transaction transaction = new Transaction();
+            transaction.setDate(new Date());
+            transaction.setId(i);
+            transaction.setDescription("test" + i);
+            transaction.setAmount(10.00);
+            transaction.setCategoryID(1);
+            dummytransactionsList.add(transaction);
+        }
+        
+        return dummytransactionsList;
+    }
+
 
     @Override
     public void createInitialCategories(){
