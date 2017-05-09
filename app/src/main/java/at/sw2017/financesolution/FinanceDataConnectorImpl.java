@@ -189,7 +189,19 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
 
     @Override
     public ArrayList<Transaction> getAllTransactions() {
-        throw new UnsupportedOperationException("Not implemented.");
+        //throw new UnsupportedOperationException("Not implemented.");
+
+        //TODO:
+        ArrayList<Transaction> transactionArrayList = new ArrayList<Transaction>();
+
+        Category cat = new Category("TestCat", 1);
+
+        Transaction t = new Transaction(new Date(), cat, "A Test 1", 10.00);
+        transactionArrayList.add(t);
+        t = new Transaction(new Date(), cat, "B Test 2", 129.00);
+        transactionArrayList.add(t);
+
+        return transactionArrayList;
     }
 
 
