@@ -221,14 +221,14 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         String args[] = {};
         Cursor cursor = this.getReadableDatabase().rawQuery(queryAllCategories, args);
 
-        ArrayList<Category> al = new ArrayList<Category>();
+        ArrayList<Category> categoriesList = new ArrayList<Category>();
         cursor.moveToNext();
         while(!cursor.isAfterLast()) {
-            Category cat = new Category();
-            cat.setName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
-            cat.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
+            Category newCategory = new Category();
+            newCategory.setName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+            newCategory.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
 
-            al.add(cat);
+            categoriesList.add(newCategory);
             cursor.moveToNext();
         }
 
