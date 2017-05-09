@@ -109,7 +109,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         return category_id;
     }
 
-    public long createTransaction(Transaction transaction, long category_id) {
+    public long createTransaction(Transaction transaction) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -190,7 +190,19 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
 
     @Override
     public ArrayList<Transaction> getAllTransactions() {
-        throw new UnsupportedOperationException("Not implemented.");
+        //throw new UnsupportedOperationException("Not implemented.");
+
+        //TODO:
+        ArrayList<Transaction> transactionArrayList = new ArrayList<Transaction>();
+
+        Category cat = new Category("TestCat", 1);
+
+        Transaction t = new Transaction(new Date(), cat, "A Test 1", 10.00);
+        transactionArrayList.add(t);
+        t = new Transaction(new Date(), cat, "B Test 2", 129.00);
+        transactionArrayList.add(t);
+
+        return transactionArrayList;
     }
 
     public ArrayList<Transaction> getLastTransactions(int number) {
@@ -268,7 +280,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             cursor.moveToNext();
         }
 
-        return null;
+        return categoriesList;
     }
 
     @Override

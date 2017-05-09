@@ -13,6 +13,10 @@ import at.sw2017.financesolution.models.Transaction;
 
 public interface FinanceDataConnector {
 
+    long createCategory(Category category);
+
+    long createTransaction(Transaction transaction);
+
     ArrayList<Transaction> getAllTransactions();
 
     ArrayList<Category> getAllCategories();

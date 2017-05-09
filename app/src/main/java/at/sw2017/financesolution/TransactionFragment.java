@@ -1,12 +1,25 @@
 package at.sw2017.financesolution;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.Locale;
+
+import at.sw2017.financesolution.helper.FinanceDataConnector;
+import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
+import at.sw2017.financesolution.models.Transaction;
 
 
 /**
@@ -26,6 +39,11 @@ public class TransactionFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    public EditText transactionSearchField;
+    public ListView transactionListView;
+
+    private TransactionListViewAdapter transactionListViewAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,7 +82,39 @@ public class TransactionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction, container, false);
+
+        View fragmentView = inflater.inflate(R.layout.fragment_transaction, container, false);
+
+        FinanceDataConnector financeDataConnector = FinanceDataConnectorImpl.getInstance(getActivity().getApplicationContext());
+
+        transactionListView = (ListView) fragmentView.findViewById(R.id.transaction_list_view);
+        ArrayList<Transaction> transactionList = financeDataConnector.getAllTransactions();
+
+        transactionListViewAdapter = new TransactionListViewAdapter(getActivity(), transactionList);
+        transactionListView.setAdapter(transactionListViewAdapter);
+
+        transactionSearchField = (EditText) fragmentView.findViewById(R.id.transaction_search_field);
+
+        transactionSearchField.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String filterText = transactionSearchField.getText().toString();
+                transactionListViewAdapter.filter(filterText);
+            }
+        });
+
+        return fragmentView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -31,4 +31,9 @@ public class Category {
     {
         return this.name;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
