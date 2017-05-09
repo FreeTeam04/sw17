@@ -12,7 +12,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements FinanceDataConnector {
 
@@ -64,6 +67,20 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     private SQLiteDatabase database;
 
     private static FinanceDataConnector instance;
+
+
+    private List<Category> initialCategories =  Arrays.asList(
+        new Category("Transportation", 1),
+        new Category("Traveling", 2),
+        new Category("Housing & Living", 3),
+        new Category("Food & Drinks", 4),
+        new Category("Clothing", 5),
+        new Category("Entertainment", 6),
+        new Category("Hobbies", 7));
+
+
+
+
 
     public static FinanceDataConnector getInstance(Context context) {
         if (instance == null) {
@@ -175,19 +192,53 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         throw new UnsupportedOperationException("Not implemented.");
     }
 
+
+    @Override
+    public void createInitialCategories(){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String args[] = {};
+
+        for (int i=0; i<initialCategories.size(); ++i) {
+            String name = initialCategories.get(i).getName();
+            long id = initialCategories.get(i).getDBID();
+
+            String query = "INSERT INTO " + TABLE_CATEGORIES + "(" + KEY_ID + "," + KEY_NAME + ")" +
+                    " SELECT " +  id + ", '" + name + "'" +
+                    " WHERE NOT EXISTS(SELECT 1 FROM " + TABLE_CATEGORIES +
+                    " WHERE " + KEY_ID +" = "+ id + ");";
+            //db.rawQuery(query, args);
+            db.execSQL(query);
+        }
+    }
+
     @Override
     public ArrayList<Category> getAllCategories() {
+
+        createInitialCategories();
+
         String queryAllCategories = "SELECT * FROM Categories;";
         String args[] = {};
-        this.database.rawQuery(queryAllCategories,args);
+        Cursor cursor = this.getReadableDatabase().rawQuery(queryAllCategories, args);
+
+        ArrayList<Category> al = new ArrayList<Category>();
+        while(!cursor.isAfterLast()) {
+            Category cat = new Category();
+            cat.setName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+            cat.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
+
+            al.add(cat);
+            cursor.moveToNext();
+        }
+
         return null;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create database tables
-        database.execSQL(createStatementCategory);
-        database.execSQL(createStatementTransaction);
+        db.execSQL(createStatementCategory);
+        db.execSQL(createStatementTransaction);
     }
 
     @Override

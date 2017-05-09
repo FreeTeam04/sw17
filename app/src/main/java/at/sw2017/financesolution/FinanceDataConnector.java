@@ -19,6 +19,8 @@ public interface FinanceDataConnector {
 
     ArrayList<Category> getAllCategories();
 
+    void createInitialCategories();
+
     // void addTransaction(Transaction transaction);
 
     void removeTransaction(Transaction transaction);
