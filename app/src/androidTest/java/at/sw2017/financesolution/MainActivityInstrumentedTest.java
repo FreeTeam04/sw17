@@ -109,8 +109,23 @@ public class MainActivityInstrumentedTest {
 
     }
 
+    @Test
+    public void testTransactionsListExists() throws Exception {
+        Matcher<View> matcher = allOf(withText("Transactions"),
+                isDescendantOfA(withId(R.id.tab_layout)));
+        onView(matcher).perform(click());
+        sleep(500);
+        onView(withId(R.id.transaction_list_view)).check(matches(isDisplayed()));
+    }
 
-
+    @Test
+    public void testTransactionsListSearchFieldExists() throws Exception {
+        Matcher<View> matcher = allOf(withText("Transactions"),
+                isDescendantOfA(withId(R.id.tab_layout)));
+        onView(matcher).perform(click());
+        sleep(500);
+        onView(withId(R.id.transaction_search_field)).check(matches(isDisplayed()));
+    }
 
 
 }
