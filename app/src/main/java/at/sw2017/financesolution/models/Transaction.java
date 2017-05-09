@@ -1,4 +1,4 @@
-package at.sw2017.financesolution;
+package at.sw2017.financesolution.models;
 
 import java.util.Date;
 

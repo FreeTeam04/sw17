@@ -1,10 +1,13 @@
 package at.sw2017.financesolution;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import at.sw2017.financesolution.helper.FinanceDataConnector;
+import at.sw2017.financesolution.models.Category;
+import at.sw2017.financesolution.models.Transaction;
 
 /**
  * Created by hannes on 26.04.17.
