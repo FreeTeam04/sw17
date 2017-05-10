@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private View _view;
 
     private OnFragmentInteractionListener mListener;
 
@@ -75,27 +78,48 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0xADD)
+            refreshView();
+    }
+
+    private void refreshView() {
+        final ListView transactionListView = (ListView) _view.findViewById(R.id.frag_home_transaction_listview);
+        ArrayList<Transaction> lastTransactionsList = FinanceDataConnectorImpl.getInstance(getContext()).getLastTransactions(5);
+
+        TransactionListViewAdapter transactionListViewAdapter = new TransactionListViewAdapter(getActivity(), lastTransactionsList);
+        transactionListView.setAdapter(transactionListViewAdapter);
+
+        ArrayList<Transaction> transactionsList = FinanceDataConnectorImpl.getInstance(getContext()).getAllTransactions();
+        double balance = 0;
+        for(Transaction transaction : transactionsList) {
+            balance += transaction.getAmount();
+        }
+
+        final TextView balanceView = (TextView) _view.findViewById(R.id.frag_home_balance);
+        balanceView.setText(balance + " €");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        _view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Add button event for AddTransaction button and start Add Transaction-Activity if clicked
-        final Button button = (Button) view.findViewById(R.id.frag_home_btn_add_transaction);
+        final Button button = (Button) _view.findViewById(R.id.frag_home_btn_add_transaction);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddTransactionActivity.class);
-                startActivity(intent);
+                startActivityForResult(new Intent(getContext(), AddTransactionActivity.class), 0xADD);
             }
         });
 
-        final ListView transactionListView = (ListView) view.findViewById(R.id.frag_home_transaction_listview);
-        ArrayList<Transaction> transactionList = FinanceDataConnectorImpl.getInstance(getContext()).getLastTransactions(5);
+        refreshView();
 
-        TransactionListViewAdapter transactionListViewAdapter = new TransactionListViewAdapter(getActivity(), transactionList);
-        transactionListView.setAdapter(transactionListViewAdapter);
-
-        return view;
+        return _view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
