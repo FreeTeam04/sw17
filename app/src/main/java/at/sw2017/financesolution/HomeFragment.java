@@ -90,12 +90,10 @@ public class HomeFragment extends Fragment {
         });
 
         final ListView transactionListView = (ListView) view.findViewById(R.id.frag_home_transaction_listview);
-        List<Transaction> transactionList = FinanceDataConnectorImpl.getInstance(getContext()).getLastTransactions(5);
+        ArrayList<Transaction> transactionList = FinanceDataConnectorImpl.getInstance(getContext()).getLastTransactions(5);
 
-        //TODO use right adapter
-        //ArrayAdapter<Transaction> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.transaction_list_row, transactionList);
-
-        //transactionListView.setAdapter(arrayAdapter);
+        TransactionListViewAdapter transactionListViewAdapter = new TransactionListViewAdapter(getActivity(), transactionList);
+        transactionListView.setAdapter(transactionListViewAdapter);
 
         return view;
     }

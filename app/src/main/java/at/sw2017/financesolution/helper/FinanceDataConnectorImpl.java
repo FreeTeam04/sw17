@@ -229,6 +229,10 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             transaction.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
             transaction.setAmount(cursor.getDouble(cursor.getColumnIndex(KEY_AMOUNT)));
             transaction.setCategoryID(cursor.getLong(cursor.getColumnIndex(KEY_CATEGORY_ID)));
+
+            Category category = getCategory(transaction.getCategoryID());
+            transaction.setCategory(category);
+
             transactionsList.add(transaction);
             cursor.moveToNext();
         }
