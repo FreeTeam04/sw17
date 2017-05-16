@@ -83,7 +83,7 @@ public class TransactionFragment extends Fragment {
         financeDataConnector = FinanceDataConnectorImpl.getInstance(getActivity().getApplicationContext());
 
         transactionListView = (ListView) fragmentView.findViewById(R.id.transaction_list_view);
-        ArrayList<Transaction> transactionList = financeDataConnector.getAllTransactions();
+        final ArrayList<Transaction> transactionList = financeDataConnector.getAllTransactions();
 
         transactionListViewAdapter = new TransactionListViewAdapter(getActivity(), transactionList);
         transactionListView.setAdapter(transactionListViewAdapter);
@@ -106,6 +106,9 @@ public class TransactionFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 String filterText = transactionSearchField.getText().toString();
                 transactionListViewAdapter.filter(filterText);
+                transactionListView.setAdapter(transactionListViewAdapter);
+                //transactionListView.invalidate();
+                //transactionListViewAdapter.notifyDataSetChanged();
             }
         });
 

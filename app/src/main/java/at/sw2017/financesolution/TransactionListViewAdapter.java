@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import at.sw2017.financesolution.models.Transaction;
@@ -89,7 +93,6 @@ public class TransactionListViewAdapter extends BaseAdapter {
                 }
             }
         }
-
-        notifyDataSetChanged();
     }
+
 }
