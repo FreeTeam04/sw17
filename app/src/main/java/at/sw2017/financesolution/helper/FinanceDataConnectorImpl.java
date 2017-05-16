@@ -124,6 +124,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         return transaction_id;
     }
 
+    @Override
     public Transaction getTransaction(long transaction_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -137,6 +138,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
 
         Transaction ts = new Transaction();
         ts.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        ts.setDescription(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
         ts.setAmount(c.getInt(c.getColumnIndex(KEY_AMOUNT)));
         ts.setCategoryID(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
         ts.setDate(convertDBDateToDate(c.getString(c.getColumnIndex(KEY_DATE))));

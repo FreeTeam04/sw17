@@ -27,6 +27,8 @@ public interface FinanceDataConnector {
 
     void removeTransaction(Transaction transaction);
 
+    Transaction getTransaction(long transaction_id);
+
     ArrayList<Transaction> getLastTransactions(int number);
 
     Date convertDBDateToDate(String ISO8601Date);

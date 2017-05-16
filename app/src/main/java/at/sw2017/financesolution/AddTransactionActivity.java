@@ -36,6 +36,8 @@ public class AddTransactionActivity extends AppCompatActivity {
 
     private FinanceDataConnector dataConnector = null;
 
+    private Transaction currentTransaction;
+
     private final static boolean SIGN_DEFAULT_STATE = false; // false = minus
 
     @Override
@@ -60,12 +62,41 @@ public class AddTransactionActivity extends AppCompatActivity {
         btnToggle = (ToggleButton) findViewById(R.id.sign);
         btnToggle.setChecked(SIGN_DEFAULT_STATE);
 
+        // checking if we are going to edit transaction
+        currentTransaction = null;
+        Bundle b = getIntent().getExtras();
+        if(b != null) {
+            long transaction_id = b.getLong("EDIT");
+            Transaction currentTransaction = dataConnector.getTransaction(transaction_id);
+
+            if(currentTransaction != null) {
+                String description = currentTransaction.getDescription();
+                Double amount = currentTransaction.getAmount();
+                Date date = currentTransaction.getDate();
+                Category category = currentTransaction.getCategory();
+
+                // Initializing activity elements
+                textDescription.setText(description);
+                textAmount.setText(amount.toString().replace("-",""));
+                btnToggle.setChecked(!(amount < 0));
+
+                // Initialize rest of the elements, datepicker and category
+
+                Log.i(LOG_ADD_TRANSACTION, "Editing Transaction (id = " + transaction_id + ")");
+            }
+        }
+
         // add button event for save button
         final Button saveButton = (Button) findViewById(R.id.buttonSave);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTransaction();
+                if(currentTransaction != null) {
+                    editTransaction();
+                } else {
+                    addTransaction();
+                }
+
             }
         });
     }
@@ -93,7 +124,16 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         long id = dataConnector.createTransaction(newTransaction);
         Log.i(LOG_ADD_TRANSACTION, "Added new Transaction to db (id = " + id + ").");
-        
+
+        this.finish();
+    }
+
+    private void editTransaction() {
+
+        // Save edited transaction
+
+        Log.i(LOG_ADD_TRANSACTION, "Edited Transaction (id = "+ currentTransaction.getId() +")");
+
         this.finish();
     }
 
