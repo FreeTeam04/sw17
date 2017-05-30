@@ -1,12 +1,15 @@
 package at.sw2017.financesolution;
 
+import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 
 import at.sw2017.financesolution.helper.FinanceDataConnector;
 import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
@@ -17,6 +20,7 @@ public class MainActivity extends AppCompatActivity
         ReportsFragment.OnFragmentInteractionListener {
 
     private ViewPager viewPager;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,15 @@ public class MainActivity extends AppCompatActivity
         TabLayout.Tab reportsTab = tabLayout.newTab();
         reportsTab.setText("Reports");
         tabLayout.addTab(reportsTab);
+
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddTransactionActivity.class);
+                startActivityForResult(intent, 0xADD);
+            }
+        });
 
         viewPager = (ViewPager) findViewById(R.id.pager);
 

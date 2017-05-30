@@ -88,25 +88,22 @@ public class MainActivityInstrumentedTest {
         //onView(withId(R.layout.fragment_reports)).check(matches(isDisplayed()));
     }
 
-    @Test
+    /*@Test
     public void testAddTransactionButtonExists() throws Exception {
 
         onView(withText("Add Transaction")).perform(click());
+    }*/
 
-        /*
-        for (int i = 1; i <= 9; i++) {
-            onView(withText(Integer.toString(i))).perform(click());
-        }
+    @Test
+    public void testFloatingActionButtonExists() throws Exception {
+        onView(withId(R.id.floating_action_button)).check(matches(isDisplayed()));
+    }
 
-        onView(withId(R.id.button0)).perform(click());
-
-        onView(withText("+")).perform(click());
-        onView(withText("-")).perform(click());
-        onView(withText("*")).perform(click());
-        onView(withText("/")).perform(click());
-        onView(withText("=")).perform(click());
-        onView(withText("C")).perform(click());*/
-
+    @Test
+    public void testFloatingActionButtonClick() throws Exception {
+        onView(withId(R.id.floating_action_button)).perform(click());
+        sleep(500);
+        onView(withId(R.id.add_transaction_activity_layout)).check(matches(isDisplayed()));
     }
 
     @Test

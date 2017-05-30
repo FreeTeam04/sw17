@@ -110,12 +110,12 @@ public class HomeFragment extends Fragment {
         _view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Add button event for AddTransaction button and start Add Transaction-Activity if clicked
-        final Button button = (Button) _view.findViewById(R.id.frag_home_btn_add_transaction);
+        /*final Button button = (Button) _view.findViewById(R.id.frag_home_btn_add_transaction);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivityForResult(new Intent(getContext(), AddTransactionActivity.class), 0xADD);
             }
-        });
+        });*/
 
         refreshView();
 
