@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment {
         }
 
         final TextView balanceView = (TextView) _view.findViewById(R.id.frag_home_balance);
-        balanceView.setText(balance + " €");
+        balanceView.setText(String.format("%.2f", balance) + " €");
     }
 
     @Override
