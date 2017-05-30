@@ -4,11 +4,23 @@
     android:layout_height="match_parent"
     tools:context="at.sw2017.financesolution.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
     <TextView
         android:id="@+id/fragment_report_textview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/hello_blank_fragment" />
 
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/chartExpensesPie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    </LinearLayout>
 </FrameLayout>

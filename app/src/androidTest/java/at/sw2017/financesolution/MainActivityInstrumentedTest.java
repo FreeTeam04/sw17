@@ -37,28 +37,28 @@ public class MainActivityInstrumentedTest {
     public ActivityTestRule<MainActivity> mActivityRule = new
             ActivityTestRule<>(MainActivity.class);
 
+    // -- Main Layout Tests --
     @Test
     public void testTabLayoutExists() throws Exception {
         onView(withId(R.id.tab_layout)).check(matches(isDisplayed()));
     }
 
     @Test
+    public void testFloatingActionButtonExists() throws Exception {
+        onView(withId(R.id.floating_action_button)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testFloatingActionButtonClick() throws Exception {
+        onView(withId(R.id.floating_action_button)).perform(click());
+        sleep(500);
+        onView(withId(R.id.add_transaction_activity_layout)).check(matches(isDisplayed()));
+    }
+
+    // -- Home Fragment Tests --
+    @Test
     public void testHomeTabExists() throws Exception {
         Matcher<View> matcher = allOf(withText("Home"),
-                isDescendantOfA(withId(R.id.tab_layout)));
-        onView(matcher).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testTransactionsTabExists() throws Exception {
-        Matcher<View> matcher = allOf(withText("Transactions"),
-                isDescendantOfA(withId(R.id.tab_layout)));
-        onView(matcher).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testReportsTabExists() throws Exception {
-        Matcher<View> matcher = allOf(withText("Reports"),
                 isDescendantOfA(withId(R.id.tab_layout)));
         onView(matcher).check(matches(isDisplayed()));
     }
@@ -72,38 +72,22 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.frag_home_balance_text)).check(matches(isDisplayed()));
     }
 
+
+    // -- Transaction Fragment Tests --
+    @Test
+    public void testTransactionsTabExists() throws Exception {
+        Matcher<View> matcher = allOf(withText("Transactions"),
+                isDescendantOfA(withId(R.id.tab_layout)));
+        onView(matcher).check(matches(isDisplayed()));
+    }
+
     @Test
     public void testTransactionsTabFragmentIsDisplayed() throws Exception {
         Matcher<View> matcher = allOf(withText("Transactions"),
                 isDescendantOfA(withId(R.id.tab_layout)));
         onView(matcher).perform(click());
-        //onView(withId(R.layout.fragment_transactions)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testReportsTabFragmentIsDisplayed() throws Exception {
-        Matcher<View> matcher = allOf(withText("Reports"),
-                isDescendantOfA(withId(R.id.tab_layout)));
-        onView(matcher).perform(click());
-        //onView(withId(R.layout.fragment_reports)).check(matches(isDisplayed()));
-    }
-
-    /*@Test
-    public void testAddTransactionButtonExists() throws Exception {
-
-        onView(withText("Add Transaction")).perform(click());
-    }*/
-
-    @Test
-    public void testFloatingActionButtonExists() throws Exception {
-        onView(withId(R.id.floating_action_button)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testFloatingActionButtonClick() throws Exception {
-        onView(withId(R.id.floating_action_button)).perform(click());
         sleep(500);
-        onView(withId(R.id.add_transaction_activity_layout)).check(matches(isDisplayed()));
+        onView(withId(R.layout.fragment_transaction)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -124,5 +108,32 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.transaction_search_field)).check(matches(isDisplayed()));
     }
 
+    // -- Reports Fragment Tests --
+    @Test
+    public void testReportsTabExists() throws Exception {
+        Matcher<View> matcher = allOf(withText("Reports"),
+                isDescendantOfA(withId(R.id.tab_layout)));
+        onView(matcher).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testReportsTabFragmentIsDisplayed() throws Exception {
+        Matcher<View> matcher = allOf(withText("Reports"),
+                isDescendantOfA(withId(R.id.tab_layout)));
+        onView(matcher).perform(click());
+
+        onView(withId(R.layout.fragment_report)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testPieChartExists() throws Exception {
+        Matcher<View> matcher = allOf(withText("Reports"),
+                isDescendantOfA(withId(R.id.tab_layout)));
+        onView(matcher).perform(click());
+
+        onView(withId(R.id.chartExpensesPie))      // withId(R.id.my_view) is a ViewMatcher
+                .perform(click())               // click() is a ViewAction
+                .check(matches(isDisplayed())); // matches(isDisplayed()) is a ViewAssertion
+    }
 
 }

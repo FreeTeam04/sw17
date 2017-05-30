@@ -8,6 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +60,27 @@ public class ReportsFragment extends Fragment {
         return fragment;
     }
 
+    private void updateData(View view)
+    {
+        // TODO: Retrieve data from database
+        // TODO: Check testability
+
+        PieChart pieChart = (PieChart) view.findViewById(R.id.chartExpensesPie);
+        List<PieEntry> entries = new ArrayList<>();
+
+        entries.add(new PieEntry(18.5f, "Green"));
+        entries.add(new PieEntry(26.7f, "Yellow"));
+        entries.add(new PieEntry(24.0f, "Red"));
+        entries.add(new PieEntry(30.8f, "Blue"));
+
+        PieDataSet set = new PieDataSet(entries, "Election Results");
+        set.setColors(ColorTemplate.VORDIPLOM_COLORS);  // use default color array
+
+        PieData data = new PieData(set);
+        pieChart.setData(data);
+        pieChart.invalidate(); // refresh
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +94,9 @@ public class ReportsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_report, container, false);
+        View view = inflater.inflate(R.layout.fragment_report, container, false);
+        updateData(view);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
