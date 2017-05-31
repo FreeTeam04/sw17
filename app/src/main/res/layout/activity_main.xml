@@ -72,6 +72,18 @@
             fab:fab_colorRipple="@android:color/darker_gray"
             fab:fab_colorNormal="@color/colorListViewDivider" />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/floating_action_button_categories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_shopping_basket_black_24dp"
+            android:tint="@android:color/primary_text_dark"
+            fab:fab_size="mini"
+            fab:fab_label="Add category"
+            fab:fab_colorPressed="@color/colorListViewDivider"
+            fab:fab_colorRipple="@android:color/darker_gray"
+            fab:fab_colorNormal="@color/colorListViewDivider" />
+
     </com.github.clans.fab.FloatingActionMenu>
 
 </RelativeLayout>

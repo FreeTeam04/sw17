@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity
 
     private ViewPager viewPager;
     private com.github.clans.fab.FloatingActionMenu floatingActionButton;
-    private com.github.clans.fab.FloatingActionButton floatingActionButtonTransactions, floatingActionButtonReminders;
+    private com.github.clans.fab.FloatingActionButton floatingActionButtonTransactions,
+            floatingActionButtonReminders, floatingActionButtonCategories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 floatingActionButtonTransactions.setVisibility(View.VISIBLE);
                 floatingActionButtonReminders.setVisibility(View.VISIBLE);
+                floatingActionButtonCategories.setVisibility(View.VISIBLE);
             }
         });
 
@@ -64,6 +66,16 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // TODO: create AddReminderActivity
+                /*Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);
+                startActivityForResult(intent, 0xADD);*/
+            }
+        });
+
+        floatingActionButtonCategories = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.floating_action_button_categories);
+        floatingActionButtonCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: create AddCategoryActivity
                 /*Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);
                 startActivityForResult(intent, 0xADD);*/
             }

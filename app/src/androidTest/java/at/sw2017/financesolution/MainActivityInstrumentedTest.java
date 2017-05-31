@@ -120,6 +120,19 @@ public class MainActivityInstrumentedTest {
     }
 
     @Test
+    public void testFloatingActionButtonCategoriesExists() throws Exception {
+        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(withId(R.id.floating_action_button_categories)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testFloatingActionButtonRCategoriesClick() throws Exception {
+        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(withId(R.id.floating_action_button_categories)).perform(click());
+        //onView(withId(R.id.add_category_activity_layout)).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testTransactionsListExists() throws Exception {
         Matcher<View> matcher = allOf(withText("Transactions"),
                 isDescendantOfA(withId(R.id.tab_layout)));
