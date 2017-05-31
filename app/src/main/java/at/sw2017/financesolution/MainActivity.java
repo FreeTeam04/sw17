@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity
         ReportsFragment.OnFragmentInteractionListener {
 
     private ViewPager viewPager;
-    private FloatingActionButton floatingActionButton;
+    private com.github.clans.fab.FloatingActionMenu floatingActionButton;
+    private com.github.clans.fab.FloatingActionButton floatingActionButtonTransactions, floatingActionButtonReminders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +41,31 @@ public class MainActivity extends AppCompatActivity
         reportsTab.setText("Reports");
         tabLayout.addTab(reportsTab);
 
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        floatingActionButton = (com.github.clans.fab.FloatingActionMenu) findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                floatingActionButtonTransactions.setVisibility(View.VISIBLE);
+                floatingActionButtonReminders.setVisibility(View.VISIBLE);
+            }
+        });
+
+        floatingActionButtonTransactions = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.floating_action_button_transactions);
+        floatingActionButtonTransactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddTransactionActivity.class);
                 startActivityForResult(intent, 0xADD);
+            }
+        });
+
+        floatingActionButtonReminders = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.floating_action_button_reminders);
+        floatingActionButtonReminders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: create AddReminderActivity
+                /*Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);
+                startActivityForResult(intent, 0xADD);*/
             }
         });
 

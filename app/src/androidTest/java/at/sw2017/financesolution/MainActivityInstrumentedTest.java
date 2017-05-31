@@ -2,6 +2,7 @@ package at.sw2017.financesolution;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.RenamingDelegatingContext;
@@ -16,6 +17,8 @@ import org.junit.Test;
 import static android.os.SystemClock.sleep;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
@@ -41,18 +44,6 @@ public class MainActivityInstrumentedTest {
     @Test
     public void testTabLayoutExists() throws Exception {
         onView(withId(R.id.tab_layout)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testFloatingActionButtonExists() throws Exception {
-        onView(withId(R.id.floating_action_button)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testFloatingActionButtonClick() throws Exception {
-        onView(withId(R.id.floating_action_button)).perform(click());
-        sleep(500);
-        onView(withId(R.id.add_transaction_activity_layout)).check(matches(isDisplayed()));
     }
 
     // -- Home Fragment Tests --
@@ -88,6 +79,44 @@ public class MainActivityInstrumentedTest {
         onView(matcher).perform(click());
         sleep(500);
         onView(withId(R.layout.fragment_transaction)).check(matches(isDisplayed()));
+        //onView(withId(R.layout.fragment_reports)).check(matches(isDisplayed()));
+    }
+
+    /*@Test
+    public void testAddTransactionButtonExists() throws Exception {
+
+        onView(withText("Add Transaction")).perform(click());
+    }*/
+
+    @Test
+    public void testFloatingActionButtonExists() throws Exception {
+        onView(withId(R.id.floating_action_button)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testFloatingActionButtonTransctionsExists() throws Exception {
+        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(withId(R.id.floating_action_button_transactions)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testFloatingActionButtonTransactionsClick() throws Exception {
+        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(withId(R.id.floating_action_button_transactions)).perform(click());
+        onView(withId(R.id.add_transaction_activity_layout)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testFloatingActionButtonRemindersExists() throws Exception {
+        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(withId(R.id.floating_action_button_reminders)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testFloatingActionButtonRemindersClick() throws Exception {
+        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(withId(R.id.floating_action_button_reminders)).perform(click());
+        //onView(withId(R.id.add_reminder_activity_layout)).check(matches(isDisplayed()));
     }
 
     @Test
