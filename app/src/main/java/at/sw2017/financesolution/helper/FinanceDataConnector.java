@@ -17,6 +17,8 @@ public interface FinanceDataConnector {
 
     long createTransaction(Transaction transaction);
 
+    long updateTransaction(Transaction transaction);
+
     ArrayList<Transaction> getAllTransactions();
 
     ArrayList<Category> getAllCategories();
@@ -26,6 +28,10 @@ public interface FinanceDataConnector {
     // void addTransaction(Transaction transaction);
 
     void removeTransaction(Transaction transaction);
+
+    Transaction getTransaction(long transaction_id);
+
+    Category getCategory(long category_id);
 
     ArrayList<Transaction> getLastTransactions(int number);
 

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -92,6 +93,17 @@ public class HomeFragment extends Fragment {
 
         TransactionListViewAdapter transactionListViewAdapter = new TransactionListViewAdapter(getActivity(), lastTransactionsList);
         transactionListView.setAdapter(transactionListViewAdapter);
+        transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Transaction transaction = (Transaction) parent.getItemAtPosition(position);
+                Log.i(LOG_HOME_FRAGMENT, "Going to edit Transaction (id = " + transaction.getId() + ", amount = "+ transaction.getAmount() +").");
+                Intent editTransactionIntent = new Intent(getContext(), AddTransactionActivity.class);
+                editTransactionIntent.putExtra("EDIT", transaction.getId());
+                // At this point requestcode is 0xADD, but later it should be something else like 0xED17
+                startActivityForResult(editTransactionIntent, 0xADD);
+            }
+        });
 
         ArrayList<Transaction> transactionsList = FinanceDataConnectorImpl.getInstance(getContext()).getAllTransactions();
         double balance = 0;

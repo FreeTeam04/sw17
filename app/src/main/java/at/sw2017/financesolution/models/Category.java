@@ -1,5 +1,7 @@
 package at.sw2017.financesolution.models;
 
+import android.util.Log;
+
 /**
  * Created by Hannes on 07.05.2017.
  */
@@ -35,5 +37,11 @@ public class Category {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Log.i("LOGIII", "Firing Equals comparison!!!");
+        return (o instanceof Category) && (this.id == ((Category) o).id);
     }
 }

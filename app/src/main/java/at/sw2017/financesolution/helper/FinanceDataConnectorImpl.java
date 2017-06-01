@@ -124,6 +124,24 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         return transaction_id;
     }
 
+    @Override
+    public long updateTransaction(Transaction transaction) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DESCRIPTION, transaction.getDescription());
+        values.put(KEY_AMOUNT, transaction.getAmount());
+        values.put(KEY_DATE, convertDateToDBDate(transaction.getDate()));
+        values.put(KEY_CATEGORY_ID, transaction.getCategoryID());
+
+        // Update row
+        // https://stackoverflow.com/a/18390848
+        long transaction_id = db.update(TABLE_TRANSACTIONS, values, "id="+transaction.getId(), null);
+
+        return transaction_id;
+    }
+
+    @Override
     public Transaction getTransaction(long transaction_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -135,15 +153,21 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         if (c != null)
             c.moveToFirst();
 
+        //Category category = new Category();
+        //category = getCategory(c.getLong(c.getColumnIndex(KEY_CATEGORY_ID)));
+
         Transaction ts = new Transaction();
         ts.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        ts.setDescription(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
         ts.setAmount(c.getInt(c.getColumnIndex(KEY_AMOUNT)));
+        //ts.setCategory(category);
         ts.setCategoryID(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
         ts.setDate(convertDBDateToDate(c.getString(c.getColumnIndex(KEY_DATE))));
 
         return ts;
     }
 
+    @Override
     public Category getCategory(long category_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
