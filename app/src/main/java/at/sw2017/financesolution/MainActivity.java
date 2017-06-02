@@ -42,16 +42,6 @@ public class MainActivity extends AppCompatActivity
         reportsTab.setText("Reports");
         tabLayout.addTab(reportsTab);
 
-        floatingActionButton = (com.github.clans.fab.FloatingActionMenu) findViewById(R.id.floating_action_button);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                floatingActionButtonTransactions.setVisibility(View.VISIBLE);
-                floatingActionButtonReminders.setVisibility(View.VISIBLE);
-                floatingActionButtonCategories.setVisibility(View.VISIBLE);
-            }
-        });
-
         floatingActionButtonTransactions = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.floating_action_button_transactions);
         floatingActionButtonTransactions.setOnClickListener(new View.OnClickListener() {
             @Override

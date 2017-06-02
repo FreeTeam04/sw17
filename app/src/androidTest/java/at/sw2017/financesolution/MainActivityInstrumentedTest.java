@@ -3,10 +3,13 @@ package at.sw2017.financesolution;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.RenamingDelegatingContext;
 import android.view.View;
+
+import com.github.clans.fab.FloatingActionButton;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -23,9 +26,11 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
 
@@ -95,39 +100,63 @@ public class MainActivityInstrumentedTest {
 
     @Test
     public void testFloatingActionButtonTransctionsExists() throws Exception {
-        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(allOf(isDescendantOfA(withId(R.id.floating_action_button)), not(withId(R.id.floating_action_button_categories)),
+                not(withId(R.id.floating_action_button_transactions)),
+                not(withId(R.id.floating_action_button_reminders)),
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                instanceOf(FloatingActionButton.class))).perform(click());
         onView(withId(R.id.floating_action_button_transactions)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testFloatingActionButtonTransactionsClick() throws Exception {
-        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(allOf(isDescendantOfA(withId(R.id.floating_action_button)), not(withId(R.id.floating_action_button_categories)),
+                not(withId(R.id.floating_action_button_transactions)),
+                not(withId(R.id.floating_action_button_reminders)),
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                instanceOf(FloatingActionButton.class))).perform(click());
         onView(withId(R.id.floating_action_button_transactions)).perform(click());
         onView(withId(R.id.add_transaction_activity_layout)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testFloatingActionButtonRemindersExists() throws Exception {
-        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(allOf(isDescendantOfA(withId(R.id.floating_action_button)), not(withId(R.id.floating_action_button_categories)),
+                not(withId(R.id.floating_action_button_transactions)),
+                not(withId(R.id.floating_action_button_reminders)),
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                instanceOf(FloatingActionButton.class))).perform(click());
         onView(withId(R.id.floating_action_button_reminders)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testFloatingActionButtonRemindersClick() throws Exception {
-        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(allOf(isDescendantOfA(withId(R.id.floating_action_button)), not(withId(R.id.floating_action_button_categories)),
+                not(withId(R.id.floating_action_button_transactions)),
+                not(withId(R.id.floating_action_button_reminders)),
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                instanceOf(FloatingActionButton.class))).perform(click());
         onView(withId(R.id.floating_action_button_reminders)).perform(click());
         //onView(withId(R.id.add_reminder_activity_layout)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testFloatingActionButtonCategoriesExists() throws Exception {
-        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(allOf(isDescendantOfA(withId(R.id.floating_action_button)), not(withId(R.id.floating_action_button_categories)),
+                not(withId(R.id.floating_action_button_transactions)),
+                not(withId(R.id.floating_action_button_reminders)),
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                instanceOf(FloatingActionButton.class))).perform(click());
         onView(withId(R.id.floating_action_button_categories)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testFloatingActionButtonRCategoriesClick() throws Exception {
-        onView(withId(R.id.floating_action_button)).perform(click());
+        onView(allOf(isDescendantOfA(withId(R.id.floating_action_button)), not(withId(R.id.floating_action_button_categories)),
+                not(withId(R.id.floating_action_button_transactions)),
+                not(withId(R.id.floating_action_button_reminders)),
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                instanceOf(FloatingActionButton.class))).perform(click());
         onView(withId(R.id.floating_action_button_categories)).perform(click());
         //onView(withId(R.id.add_category_activity_layout)).check(matches(isDisplayed()));
     }
