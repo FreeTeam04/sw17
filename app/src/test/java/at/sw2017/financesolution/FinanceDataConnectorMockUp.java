@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Map;
 
 import at.sw2017.financesolution.helper.FinanceDataConnector;
 import at.sw2017.financesolution.models.Category;
@@ -66,6 +67,11 @@ public class FinanceDataConnectorMockUp implements FinanceDataConnector {
     }
 
     @Override
+    public Category getCategory(long category_id) {
+        return null;
+    }
+
+    @Override
     public ArrayList<Transaction> getAllTransactions() {
         return this.transactions;
     }
@@ -100,5 +106,15 @@ public class FinanceDataConnectorMockUp implements FinanceDataConnector {
     public String convertDateToDBDate(Date date) {
         return null;
     }
-    
+
+    @Override
+    public Map<String, Float> getSpendingPerCategoryForCurrentMonth() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Float> getSpendingPerCategoryForCurrentYear() {
+        return null;
+    }
+
 }

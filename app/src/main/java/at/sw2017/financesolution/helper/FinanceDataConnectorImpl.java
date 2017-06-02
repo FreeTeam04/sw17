@@ -12,8 +12,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import at.sw2017.financesolution.models.Category;
 import at.sw2017.financesolution.models.Transaction;
@@ -213,9 +217,78 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     }
 
     @Override
-    public ArrayList<Transaction> getAllTransactions() {
-        //throw new UnsupportedOperationException("Not implemented.");
+    public Map<String, Float> getSpendingPerCategoryForCurrentMonth() {
 
+        Map<String, Float> spendingsInMonth = new HashMap<>();
+
+        Date date= new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int month = cal.get(Calendar.MONTH);
+
+        ArrayList<Transaction> transactions =  getTransactionsOfMonth(month);
+
+        for(int i = 0; i < transactions.size(); i++)
+        {
+            Category category = transactions.get(i).getCategory();
+
+            if(spendingsInMonth.containsKey(category.getName()))
+            {
+                Float spending = spendingsInMonth.get(category.getName());
+                Float amount = Float.valueOf((float)transactions.get(i).getAmount());
+                if (amount < 0) // if it is a spending
+                {
+                    spending += amount;
+                    spendingsInMonth.put(category.getName(),spending);
+                }
+            }
+            else
+            {
+                Float spending = Float.valueOf((float)transactions.get(i).getAmount());
+                spendingsInMonth.put(category.getName(),spending);
+            }
+        }
+
+        return spendingsInMonth;
+    }
+
+    @Override
+    public Map<String, Float> getSpendingPerCategoryForCurrentYear() {
+        Map<String, Float> spendingsInYear = new HashMap<>();
+
+        Date date= new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int year = cal.get(Calendar.YEAR);
+
+        ArrayList<Transaction> transactions =  getTransactionsOfYear(year);
+
+        for(int i = 0; i < transactions.size(); i++)
+        {
+            Category category = transactions.get(i).getCategory();
+
+            if(spendingsInYear.containsKey(category))
+            {
+                Float spending = spendingsInYear.get(category);
+                Float amount = Float.valueOf((float)transactions.get(i).getAmount());
+                if (amount < 0) // if it is a spending
+                {
+                    spending += amount;
+                    spendingsInYear.put(category.getName(),spending);
+                }
+            }
+            else
+            {
+                Float spending = Float.valueOf((float)transactions.get(i).getAmount());
+                spendingsInYear.put(category.getName(),spending);
+            }
+        }
+
+        return spendingsInYear;
+    }
+
+    @Override
+    public ArrayList<Transaction> getAllTransactions() {
         String selectQuery = "SELECT * FROM " + TABLE_TRANSACTIONS + ";";
         Cursor cursor = this.getReadableDatabase().rawQuery(selectQuery, null);
 
@@ -237,6 +310,48 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         }
 
         return transactionsList;
+    }
+
+    public ArrayList<Transaction> getTransactionsOfMonth(int month) {
+        ArrayList<Transaction> results = new ArrayList<>();
+        ArrayList<Transaction> transactions = getAllTransactions();
+        Calendar calBefore = Calendar.getInstance();
+        Calendar calAfter  = Calendar.getInstance();
+
+        for (Transaction t : transactions) {
+            calBefore.set(Calendar.MONTH, month);
+            calBefore.set(Calendar.DAY_OF_YEAR, 1);
+            calBefore.add(Calendar.DAY_OF_YEAR, -1);
+
+            calAfter.set(Calendar.MONTH, month+1);
+            calAfter.set(Calendar.DAY_OF_YEAR, 1);
+
+            if (t.getDate().after(calBefore.getTime()) && t.getDate().before(calAfter.getTime())) {
+                results.add(t);
+            }
+        }
+        return results;
+    }
+
+    public ArrayList<Transaction> getTransactionsOfYear(int year) {
+        ArrayList<Transaction> results = new ArrayList<>();
+        ArrayList<Transaction> transactions = getAllTransactions();
+        Calendar calBefore = Calendar.getInstance();
+        Calendar calAfter  = Calendar.getInstance();
+
+        for (Transaction t : transactions) {
+            calBefore.set(Calendar.YEAR, year);
+            calBefore.set(Calendar.DAY_OF_YEAR, 1);
+            calBefore.add(Calendar.DAY_OF_YEAR, -1);
+
+            calAfter.set(Calendar.YEAR, year+1);
+            calAfter.set(Calendar.DAY_OF_YEAR, 1);
+
+            if (t.getDate().after(calBefore.getTime()) && t.getDate().before(calAfter.getTime())) {
+                results.add(t);
+            }
+        }
+        return results;
     }
 
     public ArrayList<Transaction> getLastTransactions(int number) {

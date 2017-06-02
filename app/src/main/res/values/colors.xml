@@ -6,4 +6,5 @@
     <color name="colorBalance">#333333</color>
     <color name="colorListViewDivider">#CCCCCC</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorDarkGray">#3C3C3C</color>
 </resources>

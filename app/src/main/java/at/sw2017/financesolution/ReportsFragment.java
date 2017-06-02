@@ -1,40 +1,37 @@
 package at.sw2017.financesolution;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import at.sw2017.financesolution.helper.FinanceDataConnector;
+import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
+import at.sw2017.financesolution.helper.ValueFormatterCharts;
+import at.sw2017.financesolution.models.Category;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ReportsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ReportsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ReportsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FinanceDataConnector financeDataConnector;
 
     private OnFragmentInteractionListener mListener;
 
@@ -42,41 +39,61 @@ public class ReportsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ReportsFragment newInstance(String param1, String param2) {
-        ReportsFragment fragment = new ReportsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+
+    private Float calcSumOfExpenses(Map<String, Float> spendingByCategory)
+    {
+        Iterator it = spendingByCategory.entrySet().iterator();
+        Float sumOfExpenses = 0.0f;
+        while (it.hasNext()) {
+            Map.Entry<String, Float> pair = (Map.Entry)it.next();
+            sumOfExpenses = sumOfExpenses + pair.getValue();
+        }
+        return sumOfExpenses;
     }
 
     private void updateData(View view)
     {
-        // TODO: Retrieve data from database
-        // TODO: Check testability
+        Map<String, Float> spendingByCategory = financeDataConnector.getSpendingPerCategoryForCurrentYear();
 
         PieChart pieChart = (PieChart) view.findViewById(R.id.chartExpensesPie);
+        pieChart.setDrawEntryLabels(false);
+        pieChart.setCenterTextOffset(0,50);
+        pieChart.setTouchEnabled(false);
+        pieChart.setRotationEnabled(false);
+        pieChart.setTransparentCircleRadius(0.0f);
+        pieChart.setHoleRadius(20.0f);
+        pieChart.setUsePercentValues(false);
+        pieChart.setDescription(null);
         List<PieEntry> entries = new ArrayList<>();
 
-        entries.add(new PieEntry(18.5f, "Green"));
-        entries.add(new PieEntry(26.7f, "Yellow"));
-        entries.add(new PieEntry(24.0f, "Red"));
-        entries.add(new PieEntry(30.8f, "Blue"));
+        Iterator it = spendingByCategory.entrySet().iterator();
 
-        PieDataSet set = new PieDataSet(entries, "Election Results");
-        set.setColors(ColorTemplate.VORDIPLOM_COLORS);  // use default color array
+        while (it.hasNext()) {
+            Map.Entry<String, Float> pair = (Map.Entry)it.next();
+            float value = Math.abs(pair.getValue());
+            PieEntry entry = new PieEntry(value, pair.getKey());
+
+            entries.add(entry);
+        }
+
+        Legend legend = pieChart.getLegend();
+        legend.setTextSize(12.0f);
+        legend.setTextColor(Color.argb(255, 60, 60, 60));
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
+        PieDataSet set = new PieDataSet(entries, "");
+        set.setColors(ColorTemplate.MATERIAL_COLORS);
+
+        // TODO: Use here currency sign from app settings
+        ValueFormatterCharts valFormat = new ValueFormatterCharts("€");
 
         PieData data = new PieData(set);
+        data.setValueTextSize(14.0f);
+        data.setValueTextColor(Color.argb(255, 60, 60, 60));
+        data.setValueFormatter(valFormat);
+
         pieChart.setData(data);
         pieChart.invalidate(); // refresh
     }
@@ -84,10 +101,7 @@ public class ReportsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        financeDataConnector = FinanceDataConnectorImpl.getInstance(getActivity().getApplicationContext());
     }
 
     @Override
