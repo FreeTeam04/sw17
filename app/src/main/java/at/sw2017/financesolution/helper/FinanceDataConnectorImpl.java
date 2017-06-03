@@ -275,7 +275,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
 
         for(int i = 0; i < transactions.size(); i++)
         {
-            Category category = transactions.get(i).getCategory();
+            String category = transactions.get(i).getCategory().getName();
 
             if(spendingsInYear.containsKey(category))
             {
@@ -284,13 +284,13 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
                 if (amount < 0) // if it is a spending
                 {
                     spending += amount;
-                    spendingsInYear.put(category.getName(),spending);
+                    spendingsInYear.put(category,spending);
                 }
             }
             else
             {
                 Float spending = Float.valueOf((float)transactions.get(i).getAmount());
-                spendingsInYear.put(category.getName(),spending);
+                spendingsInYear.put(category,spending);
             }
         }
 
@@ -346,17 +346,18 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     public ArrayList<Transaction> getTransactionsOfYear(int year) {
         ArrayList<Transaction> results = new ArrayList<>();
         ArrayList<Transaction> transactions = getAllTransactions();
+
         Calendar calBefore = Calendar.getInstance();
         Calendar calAfter  = Calendar.getInstance();
 
+        calBefore.set(Calendar.YEAR, year);
+        calBefore.set(Calendar.DAY_OF_YEAR, 1);
+        calBefore.add(Calendar.DAY_OF_YEAR, -1);
+
+        calAfter.set(Calendar.YEAR, year+1);
+        calAfter.set(Calendar.DAY_OF_YEAR, 1);
+
         for (Transaction t : transactions) {
-            calBefore.set(Calendar.YEAR, year);
-            calBefore.set(Calendar.DAY_OF_YEAR, 1);
-            calBefore.add(Calendar.DAY_OF_YEAR, -1);
-
-            calAfter.set(Calendar.YEAR, year+1);
-            calAfter.set(Calendar.DAY_OF_YEAR, 1);
-
             if (t.getDate().after(calBefore.getTime()) && t.getDate().before(calAfter.getTime())) {
                 results.add(t);
             }

@@ -8,7 +8,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import at.sw2017.financesolution.helper.FinanceDataConnector;
 import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
@@ -87,7 +89,7 @@ public class FinanceDataConnectorTests {
 
         Context appContext = InstrumentationRegistry.getTargetContext();
         FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
-
+        fdc.clearDatabaseContent();
         List<Category> existingCategories = fdc.getAllCategories();
 
         for(int i = 0; i < initialCategories.size(); i++)
@@ -106,5 +108,108 @@ public class FinanceDataConnectorTests {
         }
     }
 
+    @Test
+    public void checkCreateCategory()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        fdc.clearDatabaseContent();
 
+        Category newCategory = new Category();
+        String newCategoryName = "TestCategory";
+        newCategory.setName(newCategoryName);
+        newCategory.setId(fdc.createCategory(newCategory));
+
+        Category category = fdc.getCategory(newCategory.getDBID());
+
+        assertNotNull(category);
+        assertEquals(category.getDBID(), newCategory.getDBID());
+        assertEquals(category.getName(), newCategory.getName());
+    }
+
+    @Test
+    public void checkCreateCategoryNullParams()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        fdc.clearDatabaseContent();
+
+        Category newCategory = new Category();
+        String newCategoryName = null;
+        newCategory.setName(null);
+        newCategory.setId(fdc.createCategory(newCategory));
+
+
+        Category category = fdc.getCategory(newCategory.getDBID());
+        assertNotNull(category);
+
+        // assertNotNull(category);
+        // assertEquals(category.getDBID(), newCategory.getDBID());
+        // assertEquals(category.getName(), newCategory.getName());
+    }
+
+    @Test
+    public void checkGetSpendingPerCategoryCurrentYear()
+    {
+        // Delete all transactions
+        // Create four transactions with current date from different categories
+        // Check if amount and stuff matches
+
+        // Transport, Taxi, -10
+        // Transport, Bus, -5
+
+        // Hobbies, Gaming Keyboard, -33.0
+        // Hobbies, Preisgeld eSport, 100.0€
+
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        fdc.clearDatabaseContent();
+        fdc.createInitialCategories();
+
+        Category transportCat = fdc.getCategory((long)1);
+        Category hobbiesCat = fdc.getCategory((long)7);
+
+        Date date = new Date();
+
+        Transaction transactionTaxi = new Transaction();
+        transactionTaxi.setCategory(transportCat);
+        transactionTaxi.setCategoryID(transportCat.getDBID());
+        transactionTaxi.setDescription("Taxi");
+        transactionTaxi.setAmount(-10.0);
+        transactionTaxi.setDate(date);
+
+        Transaction transactionBus = new Transaction();
+        transactionBus.setCategory(transportCat);
+        transactionBus.setCategoryID(transportCat.getDBID());
+        transactionBus.setDescription("Bus");
+        transactionBus.setAmount(-5.0);
+        transactionBus.setDate(date);
+
+        Transaction transactionKeyboard = new Transaction();
+        transactionKeyboard.setCategory(hobbiesCat);
+        transactionKeyboard.setCategoryID(hobbiesCat.getDBID());
+        transactionKeyboard.setDescription("Gaming Keyboard");
+        transactionKeyboard.setAmount(-33.0);
+        transactionKeyboard.setDate(date);
+
+        Transaction transactionPrice = new Transaction();
+        transactionPrice.setCategory(hobbiesCat);
+        transactionPrice.setCategoryID(hobbiesCat.getDBID());
+        transactionPrice.setDescription("Price money eSport");
+        transactionPrice.setAmount(100.0);
+        transactionPrice.setDate(date);
+
+        fdc.createTransaction(transactionTaxi);
+        fdc.createTransaction(transactionBus);
+        fdc.createTransaction(transactionKeyboard);
+        fdc.createTransaction(transactionPrice);
+
+        Map<String, Float> spendingData = fdc.getSpendingPerCategoryForCurrentYear();
+
+        Float transportationSpending = spendingData.get("Transportation");
+        Float hobbiesSpending = spendingData.get("Hobbies");
+
+        assertEquals(transportationSpending, -15.0, 0.01);
+        assertNotNull(hobbiesSpending);
+    }
 }
