@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import at.sw2017.financesolution.helper.FinanceDataConnector;
 import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
+import at.sw2017.financesolution.models.Category;
 
 import static org.junit.Assert.*;
 

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -15,7 +16,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -49,12 +49,6 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     private static final String KEY_DATE = "date";
     private static final String KEY_DESCRIPTION = "description";
 
-    private String dataDirectory = "";
-
-    public void setDatadirectory(String dataDir)
-    {
-        this.dataDirectory = dataDir;
-    }
     // CREATE TABLE t(x INTEGER, y, z, PRIMARY KEY(x ASC));
     private String createStatementCategory = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORIES + "(" +
     KEY_ID + " INTEGER, " + KEY_NAME + " TEXT, PRIMARY KEY(" + KEY_ID + " ASC));";
@@ -69,7 +63,10 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             " FOREIGN KEY ("+KEY_CATEGORY_ID+") REFERENCES Categories("+ KEY_ID + "));";
 
 
-    private SQLiteDatabase database;
+    // Delete table content statements
+    private String deleteTransactionsContent = "DELETE FROM " + TABLE_TRANSACTIONS + ";";
+    private String deleteCategoriesContent = "DELETE FROM " + TABLE_CATEGORIES + ";";
+
 
     private static FinanceDataConnector instance;
 
@@ -82,9 +79,6 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         new Category("Clothing", 5),
         new Category("Entertainment", 6),
         new Category("Hobbies", 7));
-
-
-
 
 
     public static FinanceDataConnector getInstance(Context context) {
@@ -100,6 +94,22 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
     }
 
+
+    @Override
+    public boolean clearDatabaseContent() {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(deleteTransactionsContent);
+            db.close();
+            db = this.getWritableDatabase();
+            db.execSQL(deleteCategoriesContent);
+            db.close();
+        } catch (SQLiteException sqLiteExcpetion) {
+            Log.d(LOG, sqLiteExcpetion.getMessage());
+            return false;
+        }
+        return true;
+    }
 
     public long createCategory(Category category) {
         SQLiteDatabase db = this.getWritableDatabase();
