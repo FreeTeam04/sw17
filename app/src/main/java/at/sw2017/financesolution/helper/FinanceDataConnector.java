@@ -14,6 +14,8 @@ import at.sw2017.financesolution.models.Transaction;
 
 public interface FinanceDataConnector {
 
+    boolean clearDatabaseContent();
+
     long createCategory(Category category);
 
     long createTransaction(Transaction transaction);
