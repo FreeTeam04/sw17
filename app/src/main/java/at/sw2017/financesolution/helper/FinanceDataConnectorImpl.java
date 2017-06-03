@@ -165,7 +165,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         //ts.setCategory(category);
         ts.setCategoryID(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
         ts.setDate(convertDBDateToDate(c.getString(c.getColumnIndex(KEY_DATE))));
-        ts.setPhotoPath(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
+        ts.setPhotoPath(c.getString(c.getColumnIndex(KEY_PHOTO_PATH)));
 
         return ts;
     }

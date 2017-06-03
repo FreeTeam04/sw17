@@ -32,6 +32,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,7 +57,7 @@ public class AddTransactionActivity extends AppCompatActivity {
 
     private Bitmap photoThumbnail;
     private String photoPath = "";
-    //private boolean hasPhotoSet;
+    private Uri photoUri = null;
     private boolean hasPhotoPermissions;
 
     private FinanceDataConnector dataConnector = null;
@@ -111,7 +112,8 @@ public class AddTransactionActivity extends AppCompatActivity {
                 Date date = currentTransaction.getDate();
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(date);
-                photoPath = currentTransaction.getPhotoPath();
+                //photoPath = currentTransaction.getPhotoPath();
+                photoUri = Uri.parse(currentTransaction.getPhotoPath());
 
                 // Initializing activity elements
                 textDescription.setText(description);
@@ -123,7 +125,12 @@ public class AddTransactionActivity extends AppCompatActivity {
                         calendar.get(Calendar.DAY_OF_MONTH));
                 int spinnerPos = adapterCategory.getPosition(category);
                 categorySpinner.setSelection(spinnerPos);
-                setPhotoThumbnail();
+
+                try {
+                    setPhotoThumbnail();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
 
                 Log.i(LOG_ADD_TRANSACTION, "Editing Transaction (id = " + transaction_id + ")");
@@ -145,11 +152,18 @@ public class AddTransactionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (photoPath.isEmpty()) {
+//                if (photoPath.isEmpty()) {
+//                    takePhoto();
+//                } else {
+//                    openPhoto();
+//                }
+
+                if (photoUri == null) {
                     takePhoto();
                 } else {
                     openPhoto();
                 }
+
             }
         });
 
@@ -198,31 +212,37 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         // got image
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
+            //Bundle extras = data.getExtras();
             //Bitmap imageBitmap = (Bitmap) extras.get("data");
             //photoView.setImageBitmap(imageBitmap);
 
 
-            Uri imageUri = data.getData();
+            //Uri imageUri = data.getData();
+            photoUri = data.getData();
 
+            //photoPath = getImagePath(imageUri);
 
-            photoPath = getImagePath(imageUri);
-
-            setPhotoThumbnail();
-
-            //String path = getImagePath();
-
-            //Log.i(LOG_ADD_TRANSACTION, path);
+            if(photoUri != null) {
+                try {
+                    setPhotoThumbnail();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
     }
 
-    void setPhotoThumbnail() {
+    void setPhotoThumbnail() throws IOException {
 
-        if(!photoPath.isEmpty()) {
+        if(photoUri != null) {
             // get thumbnail
-            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(photoPath),
-                    THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+
+            //Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(getImagePath(photoUri)),
+              //      THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri), THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+
             // rotate 90deg
             Matrix transformationMatrix = new Matrix();
             transformationMatrix.postRotate(90);
@@ -233,36 +253,17 @@ public class AddTransactionActivity extends AppCompatActivity {
 
     private void openPhoto() {
 
-        if(photoPath.isEmpty()) return;
+        if(photoUri != null) {
 
-        Intent openPhotoIntent = new Intent();
-        openPhotoIntent.setAction(Intent.ACTION_VIEW);
-        openPhotoIntent.setDataAndType(Uri.parse("file://" + photoPath), "image/*");
-        startActivity(openPhotoIntent);
-
+            Intent openPhotoIntent = new Intent(Intent.ACTION_VIEW, photoUri);
+            startActivity(openPhotoIntent);
+        }
     }
 
     private String getImagePath(Uri imageUri) {
 
-        String path = "";
-
-        // filepath of image
-        String[] col = {MediaStore.Images.Media.DATA};
-
-        Cursor cursor = getContentResolver().query(imageUri, col, null, null, null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-
-            int colIndex = cursor.getColumnIndex(col[0]);
-            path = cursor.getString(colIndex);
-
-            cursor.close();
-
-            Toast.makeText(AddTransactionActivity.this, "Photo saved in:" + path, Toast.LENGTH_LONG).show();
-        }
-
-        return path;
+        File myFile = new File(imageUri.getPath());
+        return myFile.getAbsolutePath();
     }
 
     private void makeTransaction() {
@@ -299,7 +300,11 @@ public class AddTransactionActivity extends AppCompatActivity {
         Date transactionDate=calendarBeg.getTime();
         transaction.setDate(transactionDate);
 
-        transaction.setPhotoPath(photoPath);
+        if (photoUri != null) {
+            transaction.setPhotoPath(photoUri.toString());
+        } else {
+            transaction.setPhotoPath("");
+        }
 
         if(updateTransaction) {
             long id = dataConnector.updateTransaction(transaction);
