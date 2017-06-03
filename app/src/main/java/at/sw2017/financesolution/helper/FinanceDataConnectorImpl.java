@@ -44,7 +44,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     private static final String KEY_AMOUNT = "amount";
     private static final String KEY_DATE = "date";
     private static final String KEY_DESCRIPTION = "description";
-
+    private static final String KEY_PHOTO_PATH = "photo";
     private String dataDirectory = "";
 
     public void setDatadirectory(String dataDir)
@@ -61,6 +61,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             KEY_DATE + " TEXT, " +
             KEY_AMOUNT + " DECIMAL(10,5), " +
             KEY_DESCRIPTION + " TEXT, " +
+            KEY_PHOTO_PATH + " TEXT, "  +
             "PRIMARY KEY(" + KEY_ID + " ASC), " +
             " FOREIGN KEY ("+KEY_CATEGORY_ID+") REFERENCES Categories("+ KEY_ID + "));";
 
@@ -117,7 +118,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         values.put(KEY_AMOUNT, transaction.getAmount());
         values.put(KEY_DATE, convertDateToDBDate(transaction.getDate()));
         values.put(KEY_CATEGORY_ID, transaction.getCategoryID());
-
+        values.put(KEY_PHOTO_PATH, transaction.getPhotoPath());
         // insert row
         long transaction_id = db.insert(TABLE_TRANSACTIONS, null, values);
 
@@ -133,6 +134,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         values.put(KEY_AMOUNT, transaction.getAmount());
         values.put(KEY_DATE, convertDateToDBDate(transaction.getDate()));
         values.put(KEY_CATEGORY_ID, transaction.getCategoryID());
+        values.put(KEY_PHOTO_PATH, transaction.getPhotoPath());
 
         // Update row
         // https://stackoverflow.com/a/18390848
@@ -163,6 +165,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         //ts.setCategory(category);
         ts.setCategoryID(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
         ts.setDate(convertDBDateToDate(c.getString(c.getColumnIndex(KEY_DATE))));
+        ts.setPhotoPath(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
 
         return ts;
     }
@@ -228,6 +231,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             transaction.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
             transaction.setAmount(cursor.getDouble(cursor.getColumnIndex(KEY_AMOUNT)));
             transaction.setCategoryID(cursor.getLong(cursor.getColumnIndex(KEY_CATEGORY_ID)));
+            transaction.setPhotoPath(cursor.getString(cursor.getColumnIndex(KEY_PHOTO_PATH)));
 
             Category category = getCategory(transaction.getCategoryID());
             transaction.setCategory(category);
@@ -253,6 +257,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             transaction.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
             transaction.setAmount(cursor.getDouble(cursor.getColumnIndex(KEY_AMOUNT)));
             transaction.setCategoryID(cursor.getLong(cursor.getColumnIndex(KEY_CATEGORY_ID)));
+            transaction.setPhotoPath(cursor.getString(cursor.getColumnIndex(KEY_PHOTO_PATH)));
 
             Category category = getCategory(transaction.getCategoryID());
             transaction.setCategory(category);
