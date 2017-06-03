@@ -233,6 +233,13 @@ public class AddTransactionActivity extends AppCompatActivity {
 
     private void openPhoto() {
 
+        if(photoPath.isEmpty()) return;
+
+        Intent openPhotoIntent = new Intent();
+        openPhotoIntent.setAction(Intent.ACTION_VIEW);
+        openPhotoIntent.setDataAndType(Uri.parse("file://" + photoPath), "image/*");
+        startActivity(openPhotoIntent);
+
     }
 
     private String getImagePath(Uri imageUri) {
