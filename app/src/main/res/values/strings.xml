@@ -9,4 +9,5 @@
     <string name="add_transaction_text">Add Transaction</string>
     <string name="toggle_plus">+</string>
     <string name="toggle_minus">-</string>
+    <string name="title_activity_add_reminder">Add Reminder</string>
 </resources>

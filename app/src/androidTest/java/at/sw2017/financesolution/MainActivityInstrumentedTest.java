@@ -137,7 +137,7 @@ public class MainActivityInstrumentedTest {
                 withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 instanceOf(FloatingActionButton.class))).perform(click());
         onView(withId(R.id.floating_action_button_reminders)).perform(click());
-        //onView(withId(R.id.add_reminder_activity_layout)).check(matches(isDisplayed()));
+        onView(withId(R.layout.activity_add_reminder)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class MainActivityInstrumentedTest {
     }
 
     @Test
-    public void testFloatingActionButtonRCategoriesClick() throws Exception {
+    public void testFloatingActionButtonCategoriesClick() throws Exception {
         onView(allOf(isDescendantOfA(withId(R.id.floating_action_button)), not(withId(R.id.floating_action_button_categories)),
                 not(withId(R.id.floating_action_button_transactions)),
                 not(withId(R.id.floating_action_button_reminders)),

@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity
         TransactionFragment.OnFragmentInteractionListener,
         ReportsFragment.OnFragmentInteractionListener {
 
+    private static final int ADD_REMINDER_ACTIVITY = 2;
+
     private ViewPager viewPager;
     private com.github.clans.fab.FloatingActionMenu floatingActionButton;
     private com.github.clans.fab.FloatingActionButton floatingActionButtonTransactions,
@@ -55,9 +57,8 @@ public class MainActivity extends AppCompatActivity
         floatingActionButtonReminders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: create AddReminderActivity
-                /*Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);
-                startActivityForResult(intent, 0xADD);*/
+                Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);
+                startActivityForResult(intent, ADD_REMINDER_ACTIVITY);
             }
         });
 
@@ -96,5 +97,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        floatingActionButton = (com.github.clans.fab.FloatingActionMenu) findViewById(R.id.floating_action_button);
+        if(floatingActionButton.isOpened()) {
+            floatingActionButton.toggle(false);
+        }
     }
 }
