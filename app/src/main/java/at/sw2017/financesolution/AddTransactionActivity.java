@@ -12,11 +12,13 @@ import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.BoolRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,6 +35,7 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -152,12 +155,6 @@ public class AddTransactionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                if (photoPath.isEmpty()) {
-//                    takePhoto();
-//                } else {
-//                    openPhoto();
-//                }
-
                 if (photoUri == null) {
                     takePhoto();
                 } else {
@@ -199,11 +196,40 @@ public class AddTransactionActivity extends AppCompatActivity {
     private void takePhoto(){
 
         if(hasPhotoPermissions) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                Log.d(LOG_ADD_TRANSACTION, "Starting Cam Intent");
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+
+
+            // check / create image directory
+            boolean dirExists = true;
+            File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "sw17");
+
+            if (!dir.exists()) {
+                dirExists = dir.mkdirs();
             }
+
+            if (!dirExists) {
+                Toast.makeText(AddTransactionActivity.this, "Error creating directory", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+
+            // filename
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
+            String fileName = "transaction-" + simpleDateFormat.format(new Date()) + ".jpg";
+
+            File file = new File(dir, fileName);
+
+            photoUri = FileProvider.getUriForFile(AddTransactionActivity.this, AddTransactionActivity.this.getApplicationContext().getPackageName() + ".provider", file);
+
+            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            takePhotoIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            if (takePhotoIntent.resolveActivity(getPackageManager()) != null) {
+                Log.d(LOG_ADD_TRANSACTION, "Starting Cam Intent");
+                startActivityForResult(takePhotoIntent, REQUEST_IMAGE_CAPTURE);
+            }
+
         }
     }
 
@@ -218,10 +244,38 @@ public class AddTransactionActivity extends AppCompatActivity {
 
 
             //Uri imageUri = data.getData();
-            photoUri = data.getData();
+
 
             //photoPath = getImagePath(imageUri);
 
+            // fix for nexus
+            /*
+            if (data.getData() != null){
+                photoUri = data.getData();
+            } else{
+                Uri uri = null;
+                Cursor c = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.ImageColumns.ORIENTATION}, MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+                if(c != null && c.moveToFirst())
+                {
+                    do {
+                        uri = Uri.parse(c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA)));
+                        photoPath = uri.toString();
+                    }while(c.moveToNext());
+                    c.close();
+                }
+                photoUri = uri;
+            }*/
+
+            /*if (data == null) {
+                photoUri = null;
+            }
+            else if(data.getData() == null){
+                photoUri = null;
+            }
+            else if(data.getExtras().get("data") == null){
+                photoUri = null;
+            }
+*/
             if(photoUri != null) {
                 try {
                     setPhotoThumbnail();
@@ -255,7 +309,11 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         if(photoUri != null) {
 
+
             Intent openPhotoIntent = new Intent(Intent.ACTION_VIEW, photoUri);
+            openPhotoIntent.setDataAndType(photoUri, "image/*");
+            openPhotoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            openPhotoIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             startActivity(openPhotoIntent);
         }
     }
