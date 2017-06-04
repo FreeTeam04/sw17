@@ -2,6 +2,7 @@
     <string name="app_name">FinanceSolution</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="expenses_pie_chart_title">Expenses this year - Overview</string>
+    <string name="budget_bar_chart_month_title">Expenses to Budget - Current Month</string>
     <string name="balance_placeholder">1234,50 €</string>
     <string name="balance_text">Balance</string>
     <string name="btn_add_transaction">Add Transaction</string>

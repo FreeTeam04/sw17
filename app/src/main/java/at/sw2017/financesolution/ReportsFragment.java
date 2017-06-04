@@ -6,16 +6,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.lang.reflect.Array;
@@ -51,8 +61,7 @@ public class ReportsFragment extends Fragment {
         return sumOfExpenses;
     }
 
-    private void updateData(View view)
-    {
+    private void createPieChartForYearOverview(View view) {
         Map<String, Float> spendingByCategory = financeDataConnector.getSpendingPerCategoryForCurrentYear();
 
         PieChart pieChart = (PieChart) view.findViewById(R.id.chartExpensesPie);
@@ -64,6 +73,7 @@ public class ReportsFragment extends Fragment {
         pieChart.setHoleRadius(20.0f);
         pieChart.setUsePercentValues(false);
         pieChart.setDescription(null);
+
         List<PieEntry> entries = new ArrayList<>();
 
         Iterator it = spendingByCategory.entrySet().iterator();
@@ -96,6 +106,71 @@ public class ReportsFragment extends Fragment {
 
         pieChart.setData(data);
         pieChart.invalidate(); // refresh
+    }
+
+    private void createBarChartForMonthlyBudgetOverview(View view) {
+
+        // TODO: Read this monthly budget from settings
+        Float monthlyDummyBudget = 800.0f;
+
+        Map<String, Float> spendingList = financeDataConnector.getSpendingPerCategoryForCurrentMonth();
+        Float spendingSumThisMonth = calcSumOfExpenses(spendingList);
+
+        BarChart barChart = (BarChart) view.findViewById(R.id.chartMonthlyBudgetChart);
+        barChart.setDescription(null);
+        barChart.setTouchEnabled(false);
+
+        YAxis yAxis = barChart.getAxisRight();
+        yAxis.setEnabled(false);
+
+        YAxis yAxisLeft = barChart.getAxisLeft();
+        yAxisLeft.setAxisMinimum(0.0f);
+        yAxisLeft.setAxisMaximum(monthlyDummyBudget + 100.0f);
+        yAxisLeft.setEnabled(true);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setGranularity(1.0f);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawLabels(false);
+
+        List<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(0f, Math.abs(spendingSumThisMonth)));
+        BarDataSet set = new BarDataSet(entries, "Expenses");
+        // set.setValueTextSize();
+        set.setColors(ColorTemplate.MATERIAL_COLORS);
+
+        List<BarEntry> entries2 = new ArrayList<>();
+        entries2.add(new BarEntry(1f, monthlyDummyBudget));
+        BarDataSet set2 = new BarDataSet(entries2, "Budget");
+
+        set.setColor(Color.rgb(231,76,60));     // MPAndroidChart red
+        set2.setColor(Color.rgb(46,204,113));   // MPAndroidChart green
+
+        BarData data = new BarData(set, set2);
+        data.setValueTextSize(14.0f);
+        data.setValueTextColor(Color.argb(255, 60, 60, 60));
+
+        // TODO: Use here currency sign from app settings
+        ValueFormatterCharts valFormat = new ValueFormatterCharts("€");
+        data.setValueFormatter(valFormat);
+
+        data.setBarWidth(0.9f);     // set custom bar width
+        barChart.setData(data);
+
+        Legend legend = barChart.getLegend();
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setTextSize(12.0f);
+        legend.setTextColor(Color.argb(255, 60, 60, 60));
+
+        barChart.setFitBars(true);  // make the x-axis fit exactly all bars
+        barChart.invalidate();      // refresh
+    }
+
+    private void updateData(View view) {
+        createPieChartForYearOverview(view);
+        createBarChartForMonthlyBudgetOverview(view);
     }
 
     @Override
@@ -151,4 +226,19 @@ public class ReportsFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+
+        if (visible) {
+            if(getView() == null)
+                return;
+
+            updateData(getView());
+        }
+    }
 }
+
+
