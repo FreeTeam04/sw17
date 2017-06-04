@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity
 
         if(id == R.id.settings) {
             Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivityForResult(settings, 0x5E7);
+            startActivity(settings);
 
             return true;
         }
