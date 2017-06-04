@@ -1,6 +1,10 @@
 package at.sw2017.financesolution;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -37,6 +41,7 @@ import android.widget.ToggleButton;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,7 +53,7 @@ import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
 import at.sw2017.financesolution.models.Category;
 import at.sw2017.financesolution.models.Transaction;
 
-public class AddTransactionActivity extends AppCompatActivity {
+public class AddTransactionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private final static String LOG_ADD_TRANSACTION = "CreateTransaction";
 
@@ -56,7 +61,7 @@ public class AddTransactionActivity extends AppCompatActivity {
     private EditText textDescription;
     private EditText textAmount;
     private Spinner categorySpinner;
-    private DatePicker datePicker;
+    private TextView textDate;
     private ToggleButton btnToggle;
     private ImageView photoView;
 
@@ -64,6 +69,7 @@ public class AddTransactionActivity extends AppCompatActivity {
     private String photoPath = "";
     private Uri photoUri = null;
     private boolean hasPhotoPermissions;
+    private Calendar calendar;
 
     private FinanceDataConnector dataConnector = null;
 
@@ -82,7 +88,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         textHeader = (TextView) findViewById(R.id.add_transaction_header);
         textDescription = (EditText) findViewById(R.id.editDescription);
         textAmount = (EditText) findViewById(R.id.editAmount);
-        datePicker = (DatePicker) findViewById(R.id.datepickerDate);
+        textDate = (TextView) findViewById(R.id.editDate);
         photoView = (ImageView) findViewById(R.id.photoView);
 
         // add categories to spinner
@@ -97,6 +103,8 @@ public class AddTransactionActivity extends AppCompatActivity {
         // set default of sign button to off
         btnToggle = (ToggleButton) findViewById(R.id.sign);
         btnToggle.setChecked(SIGN_DEFAULT_STATE);
+
+        calendar = Calendar.getInstance();
 
         // checking if we are going to edit transaction
         currentTransaction = null;
@@ -114,20 +122,16 @@ public class AddTransactionActivity extends AppCompatActivity {
 
                 String description = currentTransaction.getDescription();
                 Double amount = currentTransaction.getAmount();
-                Date date = currentTransaction.getDate();
-                Calendar calendar = new GregorianCalendar();
-                calendar.setTime(date);
-                //photoPath = currentTransaction.getPhotoPath();
+
                 photoUri = Uri.parse(currentTransaction.getPhotoPath());
 
                 // Initializing activity elements
                 textDescription.setText(description);
                 textAmount.setText(amount.toString().replace("-",""));
                 btnToggle.setChecked(!(amount < 0));
-                datePicker.updateDate(
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH));
+
+                calendar.setTime(currentTransaction.getDate());
+
                 int spinnerPos = adapterCategory.getPosition(category);
                 categorySpinner.setSelection(spinnerPos);
 
@@ -140,7 +144,11 @@ public class AddTransactionActivity extends AppCompatActivity {
 
                 Log.i(LOG_ADD_TRANSACTION, "Editing Transaction (id = " + transaction_id + ")");
             }
+
         }
+
+        // set Date label
+        textDate.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime()));
 
 
 
@@ -165,6 +173,15 @@ public class AddTransactionActivity extends AppCompatActivity {
                 }
             }
 
+            }
+        });
+
+        textDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment dateFragment = new DatePickerFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                dateFragment.show(ft, "dialog");
             }
         });
 
@@ -311,12 +328,19 @@ public class AddTransactionActivity extends AppCompatActivity {
         transaction.setCategory((Category)categorySpinner.getSelectedItem());
         transaction.setCategoryID(((Category)categorySpinner.getSelectedItem()).getDBID());
 
-        int day     = datePicker.getDayOfMonth();
-        int month   = datePicker.getMonth();
-        int year    = datePicker.getYear();
 
-        GregorianCalendar calendarBeg = new GregorianCalendar(year, month, day);
-        Date transactionDate=calendarBeg.getTime();
+        Calendar now = Calendar.getInstance();
+
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int min = now.get(Calendar.MINUTE);
+        int sec = now.get(Calendar.SECOND);
+
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.SECOND, sec);
+
+        Date transactionDate=calendar.getTime();
+
         transaction.setDate(transactionDate);
 
         if (photoUri != null) {
@@ -334,5 +358,23 @@ public class AddTransactionActivity extends AppCompatActivity {
         }
 
         this.finish();
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        calendar.set(year, month, day);
+        Log.d(LOG_ADD_TRANSACTION, year + " " + month + " " + day);
+        textDate.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime()));
+    }
+
+    public static class DatePickerFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            return new DatePickerDialog(getActivity(), (AddTransactionActivity)getActivity(), year, month, day);
+        }
     }
 }
