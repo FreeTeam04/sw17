@@ -28,7 +28,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     private static final String LOG = "FinanceDataConnector";
 
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // Database Name
     private static final String DATABASE_NAME = "FinanceDB";
