@@ -19,6 +19,8 @@ import android.support.annotation.BoolRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -155,11 +157,13 @@ public class AddTransactionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+            if (hasPhotoPermissions) {
                 if (photoUri == null) {
                     takePhoto();
                 } else {
                     openPhoto();
                 }
+            }
 
             }
         });
@@ -168,7 +172,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(this)) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MEDIA_CONTENT_CONTROL}, REQUEST_CODE_CAMERA_STORAGE);
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MEDIA_CONTENT_CONTROL, Manifest.permission.CAMERA}, REQUEST_CODE_CAMERA_STORAGE);
             }
         } else {
             Log.i("Permission", "Granted");
@@ -196,7 +200,6 @@ public class AddTransactionActivity extends AppCompatActivity {
     private void takePhoto(){
 
         if(hasPhotoPermissions) {
-
 
 
             // check / create image directory
@@ -238,44 +241,7 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         // got image
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            //Bundle extras = data.getExtras();
-            //Bitmap imageBitmap = (Bitmap) extras.get("data");
-            //photoView.setImageBitmap(imageBitmap);
 
-
-            //Uri imageUri = data.getData();
-
-
-            //photoPath = getImagePath(imageUri);
-
-            // fix for nexus
-            /*
-            if (data.getData() != null){
-                photoUri = data.getData();
-            } else{
-                Uri uri = null;
-                Cursor c = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.ImageColumns.ORIENTATION}, MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
-                if(c != null && c.moveToFirst())
-                {
-                    do {
-                        uri = Uri.parse(c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA)));
-                        photoPath = uri.toString();
-                    }while(c.moveToNext());
-                    c.close();
-                }
-                photoUri = uri;
-            }*/
-
-            /*if (data == null) {
-                photoUri = null;
-            }
-            else if(data.getData() == null){
-                photoUri = null;
-            }
-            else if(data.getExtras().get("data") == null){
-                photoUri = null;
-            }
-*/
             if(photoUri != null) {
                 try {
                     setPhotoThumbnail();
@@ -290,18 +256,20 @@ public class AddTransactionActivity extends AppCompatActivity {
     void setPhotoThumbnail() throws IOException {
 
         if(photoUri != null) {
-            // get thumbnail
 
-            //Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(getImagePath(photoUri)),
-              //      THUMBNAIL_SIZE, THUMBNAIL_SIZE);
-            //Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+            // get thumbnail
             Bitmap thumbnail = ThumbnailUtils.extractThumbnail(MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri), THUMBNAIL_SIZE, THUMBNAIL_SIZE);
 
             // rotate 90deg
             Matrix transformationMatrix = new Matrix();
             transformationMatrix.postRotate(90);
             Bitmap rotatedThumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.getWidth(), thumbnail.getHeight(), transformationMatrix, true);
-            photoView.setImageBitmap(rotatedThumbnail);
+            RoundedBitmapDrawable roundedThumbnail = RoundedBitmapDrawableFactory.create(getResources(), rotatedThumbnail);
+            float cornerRadius = (float) rotatedThumbnail.getWidth() * 0.15f;
+            roundedThumbnail.setCornerRadius(cornerRadius);
+
+           // photoView.setImageBitmap(rotatedThumbnail);
+            photoView.setImageDrawable(roundedThumbnail);
         }
     }
 
@@ -309,19 +277,12 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         if(photoUri != null) {
 
-
             Intent openPhotoIntent = new Intent(Intent.ACTION_VIEW, photoUri);
             openPhotoIntent.setDataAndType(photoUri, "image/*");
             openPhotoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             openPhotoIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             startActivity(openPhotoIntent);
         }
-    }
-
-    private String getImagePath(Uri imageUri) {
-
-        File myFile = new File(imageUri.getPath());
-        return myFile.getAbsolutePath();
     }
 
     private void makeTransaction() {
