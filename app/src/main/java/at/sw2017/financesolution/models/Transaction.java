@@ -9,17 +9,23 @@ public class Transaction {
     private String description = "";
     private double amount = 0.0;
     private long categoryID;
+    private String photoPath = "";
 
     public Transaction()
     {
     }
 
-    public Transaction(Date date, Category category, String description, double amount) {
+    public Transaction(Date date, Category category, String description, double amount, String photoPath) {
         this.creationDate = date;
         this.category = category;
         this.description = description;
         this.amount = amount;
+        this.photoPath = photoPath;
     }
+
+    public void setPhotoPath(String photoPath) {this.photoPath = photoPath;}
+
+    public String getPhotoPath() {return photoPath;}
 
     public void setDate(Date date) {this.creationDate = date; }
 
