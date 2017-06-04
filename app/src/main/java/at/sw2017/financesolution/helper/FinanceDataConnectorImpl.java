@@ -336,11 +336,11 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
 
         for (Transaction t : transactions) {
             calBefore.set(Calendar.MONTH, month);
-            calBefore.set(Calendar.DAY_OF_YEAR, 1);
-            calBefore.add(Calendar.DAY_OF_YEAR, -1);
+            calBefore.set(Calendar.DAY_OF_MONTH, 1);
+            calBefore.add(Calendar.DAY_OF_MONTH, -1);
 
             calAfter.set(Calendar.MONTH, month+1);
-            calAfter.set(Calendar.DAY_OF_YEAR, 1);
+            calAfter.set(Calendar.DAY_OF_MONTH, 1);
 
             if (t.getDate().after(calBefore.getTime()) && t.getDate().before(calAfter.getTime())) {
                 results.add(t);
