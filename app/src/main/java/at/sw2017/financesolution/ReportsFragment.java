@@ -114,10 +114,11 @@ public class ReportsFragment extends Fragment {
     private void createBarChartForMonthlyBudgetOverview(View view) {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        Float monthlyDummyBudget = Float.valueOf(sharedPref.getString("budget", "0.00"));
+        Float monthlyBudget = Float.valueOf(sharedPref.getString("budget", "0.00"));
 
         Map<String, Float> spendingList = financeDataConnector.getSpendingPerCategoryForCurrentMonth();
         Float spendingSumThisMonth = calcSumOfExpenses(spendingList);
+        spendingSumThisMonth = Math.abs(spendingSumThisMonth);
 
         BarChart barChart = (BarChart) view.findViewById(R.id.chartMonthlyBudgetChart);
         barChart.setDescription(null);
@@ -128,7 +129,15 @@ public class ReportsFragment extends Fragment {
 
         YAxis yAxisLeft = barChart.getAxisLeft();
         yAxisLeft.setAxisMinimum(0.0f);
-        yAxisLeft.setAxisMaximum(monthlyDummyBudget + 100.0f);
+
+        float max = 0.0f;
+
+        if (monthlyBudget > spendingSumThisMonth)
+            max = (((monthlyBudget*1.1f) + 99) / 100 ) * 100; // round to the next 100
+        else
+            max = (((spendingSumThisMonth * 1.1f) + 99) / 100) * 100; // round to next 100
+
+        yAxisLeft.setAxisMaximum(max);
         yAxisLeft.setEnabled(true);
 
         XAxis xAxis = barChart.getXAxis();
@@ -143,7 +152,7 @@ public class ReportsFragment extends Fragment {
         set.setColors(ColorTemplate.MATERIAL_COLORS);
 
         List<BarEntry> entries2 = new ArrayList<>();
-        entries2.add(new BarEntry(1f, monthlyDummyBudget));
+        entries2.add(new BarEntry(1f, monthlyBudget));
         BarDataSet set2 = new BarDataSet(entries2, "Budget");
 
         set.setColor(Color.rgb(231,76,60));     // MPAndroidChart red
