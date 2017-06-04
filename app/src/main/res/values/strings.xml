@@ -11,4 +11,20 @@
     <string name="toggle_plus">+</string>
     <string name="toggle_minus">-</string>
     <string name="title_activity_add_reminder">Add Reminder</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_title_budget">Monthly budget</string>
+    <string name="pref_default_budget">0</string>
+
+    <string name="pref_title_currency_symbol">Currency symbol</string>
+    <string name="pref_description_currency_symbol">
+        Symbol that is used for currency
+    </string>
+    <string-array name="pref_currency_symbol">
+        <item>€</item>
+        <item>£</item>
+        <item>$</item>
+    </string-array>
+    <string name="pref_default_currency_symbol">€</string>
 </resources>
