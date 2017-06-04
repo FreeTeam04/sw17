@@ -1,9 +1,12 @@
 package at.sw2017.financesolution;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -48,8 +51,7 @@ public class ReportsFragment extends Fragment {
     public ReportsFragment() {
         // Required empty public constructor
     }
-
-
+    
     private Float calcSumOfExpenses(Map<String, Float> spendingByCategory)
     {
         Iterator it = spendingByCategory.entrySet().iterator();
@@ -96,8 +98,9 @@ public class ReportsFragment extends Fragment {
         PieDataSet set = new PieDataSet(entries, "");
         set.setColors(ColorTemplate.MATERIAL_COLORS);
 
-        // TODO: Use here currency sign from app settings
-        ValueFormatterCharts valFormat = new ValueFormatterCharts("€");
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String currencySymbol = sharedPref.getString("currency_symbol", "€");
+        ValueFormatterCharts valFormat = new ValueFormatterCharts(currencySymbol);
 
         PieData data = new PieData(set);
         data.setValueTextSize(14.0f);
@@ -110,8 +113,8 @@ public class ReportsFragment extends Fragment {
 
     private void createBarChartForMonthlyBudgetOverview(View view) {
 
-        // TODO: Read this monthly budget from settings
-        Float monthlyDummyBudget = 800.0f;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        Float monthlyDummyBudget = Float.valueOf(sharedPref.getString("budget", "0.00"));
 
         Map<String, Float> spendingList = financeDataConnector.getSpendingPerCategoryForCurrentMonth();
         Float spendingSumThisMonth = calcSumOfExpenses(spendingList);
@@ -150,8 +153,7 @@ public class ReportsFragment extends Fragment {
         data.setValueTextSize(14.0f);
         data.setValueTextColor(Color.argb(255, 60, 60, 60));
 
-        // TODO: Use here currency sign from app settings
-        ValueFormatterCharts valFormat = new ValueFormatterCharts("€");
+        ValueFormatterCharts valFormat = new ValueFormatterCharts(sharedPref.getString("currency_symbol", "€"));
         data.setValueFormatter(valFormat);
 
         data.setBarWidth(0.9f);     // set custom bar width
