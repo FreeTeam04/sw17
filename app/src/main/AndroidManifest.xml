@@ -25,8 +25,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings">
+        </activity>
+        <activity
             android:name=".AddTransactionActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".AddReminderActivity"
             android:label="@string/title_activity_add_reminder"

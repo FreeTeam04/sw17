@@ -3,8 +3,10 @@ package at.sw2017.financesolution;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -83,8 +85,9 @@ public class HomeFragment extends Fragment {
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 0xADD)
+        if (requestCode == 0xADD) {
             refreshView();
+        }
     }
 
     private void refreshView() {
@@ -111,8 +114,14 @@ public class HomeFragment extends Fragment {
             balance += transaction.getAmount();
         }
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String currencySymbol = sharedPref.getString("currency_symbol", "€");
+        double budget = Double.valueOf(sharedPref.getString("budget", "0.00"));
         final TextView balanceView = (TextView) _view.findViewById(R.id.frag_home_balance);
-        balanceView.setText(String.format("%.2f", balance) + " €");
+
+        balanceView.setText(String.format("%.2f", balance) + " " + currencySymbol + "\nBudget: " + String.format("%.2f", budget) + " " + currencySymbol);
+
+
     }
 
     @Override
@@ -172,5 +181,12 @@ public class HomeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(LOG_HOME_FRAGMENT, "onResume() called.");
+        refreshView();
     }
 }
