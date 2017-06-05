@@ -65,8 +65,6 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     private ToggleButton btnToggle;
     private ImageView photoView;
 
-    private Bitmap photoThumbnail;
-    private String photoPath = "";
     private Uri photoUri = null;
     private boolean hasPhotoPermissions;
     private Calendar calendar;
@@ -222,11 +220,9 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             // check / create image directory
             boolean dirExists = true;
             File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "sw17");
-
             if (!dir.exists()) {
                 dirExists = dir.mkdirs();
             }
-
             if (!dirExists) {
                 Toast.makeText(AddTransactionActivity.this, "Error creating directory", Toast.LENGTH_LONG).show();
                 return;
@@ -237,6 +233,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
             String fileName = "transaction-" + simpleDateFormat.format(new Date()) + ".jpg";
 
+            // create file
             File file = new File(dir, fileName);
 
             photoUri = FileProvider.getUriForFile(AddTransactionActivity.this, AddTransactionActivity.this.getApplicationContext().getPackageName() + ".provider", file);
@@ -257,17 +254,27 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         // got image
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE ) {
+            if (resultCode == RESULT_OK) {
 
-            if(photoUri != null) {
-                try {
-                    setPhotoThumbnail();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (photoUri != null) {
+                    try {
+                        setPhotoThumbnail();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                // cancelled or failed: delete file at photoUri and set Uri null
+                if (photoUri != null) {
+                    this.getContentResolver().delete(photoUri, null, null);
+                    photoUri = null;
                 }
             }
 
         }
+
+
     }
 
     void setPhotoThumbnail() throws IOException {
@@ -318,7 +325,20 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             }
         }
 
-        double amount = Double.parseDouble(textAmount.getText().toString());
+        // check if fields are filled
+
+        if(textDescription.getText().toString().isEmpty()){
+            Toast.makeText(AddTransactionActivity.this, "No description", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String amountString = textAmount.getText().toString();
+        if (amountString.isEmpty() || amountString.equals(".")) {
+            Toast.makeText(AddTransactionActivity.this, "No amount", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        double amount = Double.parseDouble(amountString);
 
         if (!btnToggle.isChecked())
             amount = amount * -1;
@@ -377,4 +397,17 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             return new DatePickerDialog(getActivity(), (AddTransactionActivity)getActivity(), year, month, day);
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        // override to clean unused photo
+        if (photoUri != null) {
+            this.getContentResolver().delete(photoUri, null, null);
+            photoUri = null;
+        }
+
+        super.onBackPressed();
+    }
+
 }
