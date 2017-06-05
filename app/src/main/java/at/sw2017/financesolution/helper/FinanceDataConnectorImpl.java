@@ -373,7 +373,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
 
     public ArrayList<Transaction> getLastTransactions(int number) {
 
-        String selectQuery = "SELECT * FROM " + TABLE_TRANSACTIONS + " LIMIT " + number + ";";
+        String selectQuery = "SELECT * FROM " + TABLE_TRANSACTIONS + " ORDER BY " + KEY_ID + " DESC " + " LIMIT " + number + ";";
         Cursor cursor = this.getReadableDatabase().rawQuery(selectQuery, null);
 
         ArrayList<Transaction> transactionsList = new ArrayList<Transaction>();
