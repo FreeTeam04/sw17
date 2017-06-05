@@ -99,9 +99,8 @@ public class AddTransactionActivityInstrumentedTest {
 
     @Test
     public void testEditDate() throws Exception {
-
         onView(withId(R.id.editDate)).perform(click());
-        //wait(5000);
+
         int year = 1990;
         int monthOfYear = 10;
         int dayOfMonth = 15;
