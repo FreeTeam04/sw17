@@ -17,15 +17,19 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.registerIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNot.not;
 
 /**
  * Created by fabiowallner on 09/05/2017.
@@ -63,12 +67,6 @@ public class AddTransactionActivityInstrumentedTest {
         onView(withId(R.id.editAmount)).check(matches(isDisplayed()));
     }
 
-    /*
-    @Test
-    public void testDatePickerExists() throws Exception {
-        onView(withId(R.id.datepickerDate)).check(matches(isDisplayed()));
-    }
-*/
     @Test
     public void testSaveButtonExists() throws Exception {
         onView(withId(R.id.buttonSave)).check(matches(isDisplayed()));
@@ -118,6 +116,29 @@ public class AddTransactionActivityInstrumentedTest {
 
         onView(withId(R.id.editDate)).check(matches(withText(expectedText)));
 
+    }
+
+    @Test
+    public void testInvalidDescriptionInput() throws Exception {
+
+        onView(withId(R.id.buttonSave)).perform(click());
+        onView(withId(R.id.editAmount)).perform(typeText("3.1415"));
+        onView(withText("No description")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testNoAmountInput() throws Exception {
+        onView(withId(R.id.editDescription)).perform(typeText("test description"));
+        onView(withId(R.id.buttonSave)).perform(click());
+        onView(withText("No amount")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testInvalidAmountInput() throws Exception {
+        onView(withId(R.id.editDescription)).perform(typeText("test description"));
+        onView(withId(R.id.buttonSave)).perform(click());
+        onView(withId(R.id.editAmount)).perform(typeText("."));
+        onView(withText("No amount")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 }
 
