@@ -121,7 +121,11 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
                 String description = currentTransaction.getDescription();
                 Double amount = currentTransaction.getAmount();
 
-                photoUri = Uri.parse(currentTransaction.getPhotoPath());
+                if (currentTransaction.getPhotoPath().isEmpty()) {
+                    photoUri = null;
+                } else {
+                    photoUri = Uri.parse(currentTransaction.getPhotoPath());
+                }
 
                 // Initializing activity elements
                 textDescription.setText(description);
@@ -267,7 +271,11 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             } else {
                 // cancelled or failed: delete file at photoUri and set Uri null
                 if (photoUri != null) {
-                    this.getContentResolver().delete(photoUri, null, null);
+
+                    File f = new File(photoUri.getPath());
+                    if(f.exists()) {
+                        this.getContentResolver().delete(photoUri, null, null);
+                    }
                     photoUri = null;
                 }
             }
@@ -403,7 +411,11 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
     {
         // override to clean unused photo
         if (photoUri != null) {
-            this.getContentResolver().delete(photoUri, null, null);
+            // check if file exists
+            File f = new File(photoUri.getPath());
+            if(f.exists()){
+                this.getContentResolver().delete(photoUri, null, null);
+            }
             photoUri = null;
         }
 
