@@ -151,7 +151,7 @@ public class MainActivityInstrumentedTest {
                 withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 instanceOf(FloatingActionButton.class))).perform(click());
         onView(withId(R.id.floating_action_button_reminders)).perform(click());
-        onView(withId(R.layout.activity_add_reminder)).check(matches(isDisplayed()));
+        onView(withId(R.id.activity_add_reminder)).check(matches(isDisplayed()));
     }
 
     @Test

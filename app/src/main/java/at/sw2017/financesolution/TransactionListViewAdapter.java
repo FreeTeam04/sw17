@@ -86,9 +86,9 @@ public class TransactionListViewAdapter extends BaseAdapter {
         }
         else {
             for(Transaction currentTransaction : this.transactionList) {
-                String currentDescription = currentTransaction.getDescription();
-                String currentCategoryName = currentTransaction.getCategory().getName();
-                if(currentDescription.contains(filterText) || currentCategoryName.contains(filterText)) {
+                String currentDescription = currentTransaction.getDescription().toLowerCase();
+                String currentCategoryName = currentTransaction.getCategory().getName().toLowerCase();
+                if(currentDescription.contains(filterText.toLowerCase()) || currentCategoryName.contains(filterText.toLowerCase())) {
                     this.filteredTransactionList.add(currentTransaction);
                 }
             }
