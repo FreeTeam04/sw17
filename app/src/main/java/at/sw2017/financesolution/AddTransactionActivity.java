@@ -7,26 +7,19 @@ import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.BoolRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -46,7 +39,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import at.sw2017.financesolution.helper.FinanceDataConnector;
 import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
@@ -93,7 +85,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         dataConnector = FinanceDataConnectorImpl.getInstance(getApplicationContext());
         ArrayList<Category> categories = dataConnector.getAllCategories();
 
-        categorySpinner = (Spinner) findViewById(R.id.spinnerGategory);
+        categorySpinner = (Spinner) findViewById(R.id.spinnerCategory);
         ArrayAdapter<Category> adapterCategory = new ArrayAdapter<Category>(getApplicationContext(),
                 android.R.layout.simple_spinner_dropdown_item, categories);
         categorySpinner.setAdapter(adapterCategory);
