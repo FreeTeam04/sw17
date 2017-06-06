@@ -1,12 +1,12 @@
 package at.sw2017.financesolution;
 
-import android.provider.MediaStore;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.PickerActions;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.DatePicker;
+
+import com.github.clans.fab.FloatingActionButton;
 
 import org.hamcrest.Matchers;
 import org.junit.Rule;
@@ -16,20 +16,27 @@ import org.junit.runner.RunWith;
 import java.text.DateFormat;
 import java.util.Calendar;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.registerIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.hasToString;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.StringStartsWith.startsWith;
 
 /**
  * Created by fabiowallner on 09/05/2017.
@@ -54,7 +61,7 @@ public class AddTransactionActivityInstrumentedTest {
 
     @Test
     public void testSpinnerGategoryExists() throws Exception {
-        onView(withId(R.id.spinnerGategory)).check(matches(isDisplayed()));
+        onView(withId(R.id.spinnerCategory)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -139,5 +146,6 @@ public class AddTransactionActivityInstrumentedTest {
         onView(withId(R.id.editAmount)).perform(typeText("."));
         onView(withText("No amount")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
+
 }
 
