@@ -1,6 +1,7 @@
 package at.sw2017.financesolution;
 
 import android.content.Context;
+import android.database.CursorIndexOutOfBoundsException;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 import at.sw2017.financesolution.helper.FinanceDataConnector;
 import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
 import at.sw2017.financesolution.models.Category;
+import at.sw2017.financesolution.models.Reminder;
 import at.sw2017.financesolution.models.Transaction;
 
 import static org.junit.Assert.*;
@@ -57,6 +59,18 @@ public class FinanceDataConnectorTests {
 
         List<Transaction> transactions = fdc.getAllTransactions();
         assertEquals(0, transactions.size());
+    }
+
+    @Test
+    public void checkDatabaseClearDeletesReminders()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+
+        fdc.clearDatabaseContent();
+
+        List<Reminder> reminders = fdc.getAllReminders();
+        assertEquals(0, reminders.size());
     }
 
     @Test
@@ -125,6 +139,68 @@ public class FinanceDataConnectorTests {
         assertNotNull(category);
         assertEquals(category.getDBID(), newCategory.getDBID());
         assertEquals(category.getName(), newCategory.getName());
+    }
+
+    @Test
+    public void checkCreateReminder()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        fdc.clearDatabaseContent();
+
+        Reminder reminder = new Reminder(new Date(), "TestReminder", 12.34);
+        reminder.setId(fdc.createReminder(reminder));
+
+        Reminder reminderFromDb = fdc.getReminder(reminder.getId());
+
+        assertNotNull(reminderFromDb);
+        assertEquals(reminder.getId(), reminderFromDb.getId());
+        assertEquals(reminder.getTitle(), reminderFromDb.getTitle());
+    }
+
+    @Test
+    public void checkEditReminder()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        fdc.clearDatabaseContent();
+
+        Reminder reminder = new Reminder(new Date(), "TestReminder", 12.34);
+        reminder.setId(fdc.createReminder(reminder));
+
+        Reminder reminderFromDb = fdc.getReminder(reminder.getId());
+
+        reminderFromDb.setTitle("TestReminder edited");
+        fdc.updateReminder(reminderFromDb);
+
+        Reminder reminderFromDb2 = fdc.getReminder(reminderFromDb.getId());
+
+        assertNotNull(reminderFromDb2);
+        assertEquals(reminderFromDb.getId(), reminderFromDb2.getId());
+        assertEquals(reminderFromDb.getTitle(), reminderFromDb2.getTitle());
+    }
+
+    @Test
+    public void checkDeleteReminder()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        fdc.clearDatabaseContent();
+
+        Reminder reminder = new Reminder(new Date(), "TestReminder", 12.34);
+        reminder.setId(fdc.createReminder(reminder));
+
+        fdc.removeReminder(reminder);
+        Reminder reminderFromDb = new Reminder();
+
+        try {
+            reminderFromDb = fdc.getReminder(reminder.getId());
+        }
+        catch(CursorIndexOutOfBoundsException ex) {
+            reminderFromDb = null;
+        }
+
+        assertNull(reminderFromDb);
     }
 
     @Test

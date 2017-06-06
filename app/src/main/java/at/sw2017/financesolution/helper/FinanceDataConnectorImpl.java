@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import at.sw2017.financesolution.models.Category;
+import at.sw2017.financesolution.models.Reminder;
 import at.sw2017.financesolution.models.Transaction;
 
 public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements FinanceDataConnector {
@@ -28,7 +29,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     private static final String LOG = "FinanceDataConnector";
 
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Name
     private static final String DATABASE_NAME = "FinanceDB";
@@ -36,6 +37,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     // Table Names
     private static final String TABLE_TRANSACTIONS = "Transactions";
     private static final String TABLE_CATEGORIES = "Categories";
+    private static final String TABLE_REMINDERS = "Reminders";
 
     // Common column names
     private static final String KEY_ID = "id";
@@ -49,6 +51,11 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     private static final String KEY_DATE = "date";
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_PHOTO_PATH = "photo";
+
+    // REMINDER Table - column names
+    private static final String KEY_REMINDER_AMOUNT = "amount";
+    private static final String KEY_REMINDER_DATE = "date";
+    private static final String KEY_REMINDER_TITLE = "title";
     
 
     // CREATE TABLE t(x INTEGER, y, z, PRIMARY KEY(x ASC));
@@ -65,10 +72,18 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             "PRIMARY KEY(" + KEY_ID + " ASC), " +
             " FOREIGN KEY ("+KEY_CATEGORY_ID+") REFERENCES Categories("+ KEY_ID + "));";
 
+    private String createStatementReminder = "CREATE TABLE IF NOT EXISTS "+ TABLE_REMINDERS + "(" +
+            KEY_ID + " INTEGER, " +
+            KEY_REMINDER_DATE + " TEXT, " +
+            KEY_REMINDER_AMOUNT + " DECIMAL(10,5), " +
+            KEY_REMINDER_TITLE + " TEXT, " +
+            "PRIMARY KEY(" + KEY_ID + " ASC));";
+
 
     // Delete table content statements
     private String deleteTransactionsContent = "DELETE FROM " + TABLE_TRANSACTIONS + ";";
     private String deleteCategoriesContent = "DELETE FROM " + TABLE_CATEGORIES + ";";
+    private String deleteRemindersContent = "DELETE FROM " + TABLE_REMINDERS + ";";
 
 
     private static FinanceDataConnector instance;
@@ -106,6 +121,9 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             db.close();
             db = this.getWritableDatabase();
             db.execSQL(deleteCategoriesContent);
+            db.close();
+            db = this.getWritableDatabase();
+            db.execSQL(deleteRemindersContent);
             db.close();
         } catch (SQLiteException sqLiteExcpetion) {
             Log.d(LOG, sqLiteExcpetion.getMessage());
@@ -445,6 +463,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         // Create database tables
         db.execSQL(createStatementCategory);
         db.execSQL(createStatementTransaction);
+        db.execSQL(createStatementReminder);
     }
 
     @Override
@@ -452,6 +471,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         // on upgrade drop older tables
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDERS);
         // create new tables
         onCreate(db);
     }
@@ -460,5 +480,83 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())
             db.close();
+    }
+
+    @Override
+    public ArrayList<Reminder> getAllReminders() {
+        String selectQuery = "SELECT * FROM " + TABLE_REMINDERS + " ORDER BY " + KEY_REMINDER_DATE + " ASC;";
+        Cursor cursor = this.getReadableDatabase().rawQuery(selectQuery, null);
+
+        ArrayList<Reminder> reminderList = new ArrayList<Reminder>();
+        cursor.moveToNext();
+        while(!cursor.isAfterLast()) {
+            Reminder reminder = new Reminder();
+            reminder.setDate(convertDBDateToDate(cursor.getString(cursor.getColumnIndex(KEY_REMINDER_DATE))));
+            reminder.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
+            reminder.setTitle(cursor.getString(cursor.getColumnIndex(KEY_REMINDER_TITLE)));
+            reminder.setAmount(cursor.getDouble(cursor.getColumnIndex(KEY_REMINDER_AMOUNT)));
+
+            reminderList.add(reminder);
+            cursor.moveToNext();
+        }
+
+        return reminderList;
+    }
+
+    @Override
+    public Reminder getReminder(long reminder_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + TABLE_REMINDERS + " WHERE "
+                + KEY_ID + " = " + reminder_id;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        //Category category = new Category();
+        //category = getCategory(c.getLong(c.getColumnIndex(KEY_CATEGORY_ID)));
+
+        Reminder reminder = new Reminder();
+        reminder.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        reminder.setTitle(c.getString(c.getColumnIndex(KEY_REMINDER_TITLE)));
+        reminder.setAmount(c.getInt(c.getColumnIndex(KEY_REMINDER_AMOUNT)));
+        reminder.setDate(convertDBDateToDate(c.getString(c.getColumnIndex(KEY_REMINDER_DATE))));
+
+        return reminder;
+    }
+
+    public long createReminder(Reminder reminder) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_REMINDER_TITLE, reminder.getTitle());
+        values.put(KEY_REMINDER_AMOUNT, reminder.getAmount());
+        values.put(KEY_REMINDER_DATE, convertDateToDBDate(reminder.getDate()));
+
+        long reminderId = db.insert(TABLE_REMINDERS, null, values);
+
+        return reminderId;
+    }
+
+    @Override
+    public long updateReminder(Reminder reminder) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_REMINDER_TITLE, reminder.getTitle());
+        values.put(KEY_REMINDER_AMOUNT, reminder.getAmount());
+        values.put(KEY_REMINDER_DATE, convertDateToDBDate(reminder.getDate()));
+
+        long transaction_id = db.update(TABLE_REMINDERS, values, "id=" + reminder.getId(), null);
+
+        return transaction_id;
+    }
+
+    @Override
+    public void removeReminder(Reminder reminder) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_REMINDERS, "id=" + reminder.getId(), null);
     }
 }

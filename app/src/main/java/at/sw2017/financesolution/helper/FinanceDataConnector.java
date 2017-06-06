@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 import at.sw2017.financesolution.models.Category;
+import at.sw2017.financesolution.models.Reminder;
 import at.sw2017.financesolution.models.Transaction;
 
 /**
@@ -22,9 +23,15 @@ public interface FinanceDataConnector {
 
     long updateTransaction(Transaction transaction);
 
+    long createReminder(Reminder reminder);
+
+    long updateReminder(Reminder reminder);
+
     ArrayList<Transaction> getAllTransactions();
 
     ArrayList<Category> getAllCategories();
+
+    ArrayList<Reminder> getAllReminders();
 
     void createInitialCategories();
 
@@ -32,7 +39,11 @@ public interface FinanceDataConnector {
 
     void removeTransaction(Transaction transaction);
 
+    void removeReminder(Reminder reminder);
+
     Transaction getTransaction(long transaction_id);
+
+    Reminder getReminder(long reminder_id);
 
     Category getCategory(long category_id);
 

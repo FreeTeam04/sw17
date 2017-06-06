@@ -51,6 +51,11 @@ public class AddReminderActivityInstrumentedTest {
     }
 
     @Test
+    public void testAddReminderEditTimeExists() throws Exception {
+        onView(withId(R.id.edittext_add_reminder_time)).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testAddReminderButtonSaveExists() throws Exception {
         onView(withId(R.id.button_save_reminder)).check(matches(isDisplayed()));
     }

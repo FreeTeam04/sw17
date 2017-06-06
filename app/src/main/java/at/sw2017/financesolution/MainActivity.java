@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import at.sw2017.financesolution.helper.FinanceDataConnector;
 import at.sw2017.financesolution.helper.FinanceDataConnectorImpl;
@@ -105,6 +106,13 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
+        if(id == R.id.reminders) {
+            Intent reminders = new Intent(MainActivity.this, ReminderActivity.class);
+            startActivity(reminders);
+
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -120,6 +128,15 @@ public class MainActivity extends AppCompatActivity
         floatingActionButton = (com.github.clans.fab.FloatingActionMenu) findViewById(R.id.floating_action_button);
         if(floatingActionButton.isOpened()) {
             floatingActionButton.toggle(false);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == ADD_REMINDER_ACTIVITY) {
+            Toast.makeText(this, "Reminder was added.", Toast.LENGTH_LONG).show();
         }
     }
 }

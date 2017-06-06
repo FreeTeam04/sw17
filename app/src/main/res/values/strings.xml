@@ -12,6 +12,7 @@
     <string name="toggle_minus">-</string>
     <string name="title_activity_add_reminder">Add Reminder</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_reminder">Reminders</string>
 
     <!-- Strings related to Settings -->
     <string name="pref_title_budget">Monthly budget</string>
