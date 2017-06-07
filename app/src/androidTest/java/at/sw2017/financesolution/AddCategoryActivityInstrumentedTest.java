@@ -50,11 +50,6 @@ public class AddCategoryActivityInstrumentedTest {
 
     // Test if UI elements are displayed
     @Test
-    public void testAddCategoryHeaderExists() throws Exception {
-        onView(withId(R.id.add_category_header)).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void testNameTextFieldExists() throws Exception {
         onView(withId(R.id.editName)).check(matches(isDisplayed()));
     }

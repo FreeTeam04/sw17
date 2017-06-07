@@ -50,11 +50,6 @@ public class AddTransactionActivityInstrumentedTest {
 
     // Test if UI elements are displayed
     @Test
-    public void testAddTransactionHeaderExists() throws Exception {
-        onView(withId(R.id.add_transaction_header)).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void testDescriptionTextFieldExists() throws Exception {
         onView(withId(R.id.editDescription)).check(matches(isDisplayed()));
     }
