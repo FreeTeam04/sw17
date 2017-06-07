@@ -283,7 +283,7 @@ public class MainActivityInstrumentedTest {
                 instanceOf(FloatingActionButton.class))).perform(click());
         onView(withId(R.id.floating_action_button_transactions)).perform(click());
 
-        // goback
+        // go back
         Espresso.pressBack();
 
 
@@ -352,7 +352,7 @@ public class MainActivityInstrumentedTest {
 
         // check entries
         onView(withId(R.id.editDescription)).check(matches(withText(description)));
-        //onView(withId(R.id.editAmount)).check(matches(withText("-"+amount))); // TODO: uncomment after getamount decimal fix
+        onView(withId(R.id.editAmount)).check(matches(withText(amount))); // TODO: uncomment after getamount decimal fix
         onView(withId(R.id.spinnerCategory)).check(matches(withSpinnerText(containsString(category))));
         onView(withId(R.id.editDate)).check(matches(withText(expectedDate)));
 
