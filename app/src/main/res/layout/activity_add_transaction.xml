@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/add_transaction_activity_layout"
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <TextView
-        android:id="@+id/add_transaction_header"
+    <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp"
-        android:text="@string/add_transaction_text"
-        android:textColor="@color/colorWhite"></TextView>
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -22,95 +29,109 @@
 
         <EditText
             android:id="@+id/editDescription"
-            android:layout_width="298dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
             android:ems="10"
             android:hint="Description"
             android:inputType="textPersonName"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/photoView"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <DatePicker
-            android:id="@+id/datepickerDate"
-            android:layout_width="339dp"
-            android:layout_height="175dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:datePickerMode="spinner"
-            android:hint="Description"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            app:layout_constraintHorizontal_bias="0.517"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="17dp"
-            app:layout_constraintTop_toBottomOf="@+id/editAmount" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
 
         <ToggleButton
             android:id="@+id/sign"
             android:layout_width="88dp"
-            android:layout_height="48dp"
+            android:layout_height="0dp"
             android:textOff="@string/toggle_minus"
             android:textOn="@string/toggle_plus"
-            android:layout_marginLeft="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginTop="25dp"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerGategory"
-            android:layout_marginStart="44dp" />
+            app:layout_constraintTop_toBottomOf="@+id/photoView"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editAmount" />
 
         <EditText
             android:id="@+id/editAmount"
-            android:inputType="numberDecimal"
-            android:ems="10"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerGategory"
-            app:layout_constraintLeft_toRightOf="@+id/sign"
+            android:ems="10"
+            android:hint="Amount"
+            android:inputType="numberDecimal"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/photoView"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintHorizontal_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/photoView"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <EditText
+            android:id="@+id/editDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="24dp"
+            android:focusableInTouchMode="false"
+            android:hint="Date"
+            android:inputType="date"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editAmount" />
 
         <Spinner
-            android:id="@+id/spinnerGategory"
+            android:id="@+id/spinnerCategory"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:longClickable="false"
             android:spinnerMode="dialog"
-            app:layout_constraintTop_toBottomOf="@+id/editDescription"
+            app:layout_constraintBottom_toBottomOf="@+id/photoView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/photoView"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginTop="33dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp" />
+            app:layout_constraintTop_toBottomOf="@+id/editDescription"
+            app:layout_constraintVertical_bias="0.428" />
 
         <Button
             android:id="@+id/buttonSave"
-            android:layout_width="297dp"
-            android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:text="Save"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="11dp"
-            android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginRight="8dp"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/datepickerDate"
-            app:layout_constraintHorizontal_bias="0.507" />
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/editDate" />
+
+        <ImageView
+            android:id="@+id/photoView"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_camera"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

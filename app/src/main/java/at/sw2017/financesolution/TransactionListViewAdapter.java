@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import at.sw2017.financesolution.models.Transaction;
@@ -70,7 +74,7 @@ public class TransactionListViewAdapter extends BaseAdapter {
         txtTransactionDate.setText(DateFormat.getDateInstance().format(currentTransaction.getDate()));
         txtTransactionCategory.setText(currentTransaction.getCategory().getName());
         txtTransactionDescription.setText(currentTransaction.getDescription());
-        txtTransactionAmount.setText(String.valueOf(currentTransaction.getAmount()));
+        txtTransactionAmount.setText(String.format("%.2f", currentTransaction.getAmount()));
 
         return convertView;
     }
@@ -82,14 +86,13 @@ public class TransactionListViewAdapter extends BaseAdapter {
         }
         else {
             for(Transaction currentTransaction : this.transactionList) {
-                String currentDescription = currentTransaction.getDescription();
-                String currentCategoryName = currentTransaction.getCategory().getName();
-                if(currentDescription.contains(filterText) || currentCategoryName.contains(filterText)) {
+                String currentDescription = currentTransaction.getDescription().toLowerCase();
+                String currentCategoryName = currentTransaction.getCategory().getName().toLowerCase();
+                if(currentDescription.contains(filterText.toLowerCase()) || currentCategoryName.contains(filterText.toLowerCase())) {
                     this.filteredTransactionList.add(currentTransaction);
                 }
             }
         }
-
-        notifyDataSetChanged();
     }
+
 }

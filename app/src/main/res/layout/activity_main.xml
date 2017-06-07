@@ -3,6 +3,7 @@
     android:id="@+id/main_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,5 +23,67 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/tab_layout"/>
+
+    <!--<android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:tint="@android:color/white"
+        android:src="@android:drawable/ic_input_add" />-->
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/floating_action_button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true"
+        fab:menu_backgroundColor="#ccffffff"
+        fab:menu_animationDelayPerItem="0"
+        fab:menu_colorNormal="@color/colorAccent"
+        fab:menu_colorPressed="@color/colorAccent"
+        fab:menu_colorRipple="@color/colorPrimary"
+        android:padding="16dp" >
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/floating_action_button_transactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_receipt_black_24dp"
+            fab:fab_size="mini"
+            fab:fab_label="Add transaction"
+            fab:fab_colorPressed="@color/colorListViewDivider"
+            fab:fab_colorRipple="@android:color/darker_gray"
+            fab:fab_colorNormal="@color/colorListViewDivider" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/floating_action_button_reminders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_alarm_add_black_24dp"
+            android:tint="@android:color/primary_text_dark"
+            fab:fab_size="mini"
+            fab:fab_label="Add reminder"
+            fab:fab_colorPressed="@color/colorListViewDivider"
+            fab:fab_colorRipple="@android:color/darker_gray"
+            fab:fab_colorNormal="@color/colorListViewDivider" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/floating_action_button_categories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_shopping_basket_black_24dp"
+            android:tint="@android:color/primary_text_dark"
+            fab:fab_size="mini"
+            fab:fab_label="Add category"
+            fab:fab_colorPressed="@color/colorListViewDivider"
+            fab:fab_colorRipple="@android:color/darker_gray"
+            fab:fab_colorNormal="@color/colorListViewDivider" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 
 </RelativeLayout>

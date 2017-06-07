@@ -4,11 +4,50 @@
     android:layout_height="match_parent"
     tools:context="at.sw2017.financesolution.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/fragment_report_textview"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
+            <TextView
+                android:id="@+id/fragment_report_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/expenses_pie_chart_title"
+                android:textSize="20dp"
+                android:textColor="@color/colorDarkGray" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chartExpensesPie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/chart_min_height"
+                android:layout_marginBottom="50dp"/>
+
+            <TextView
+                android:id="@+id/barchart_report_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/budget_bar_chart_month_title"
+                android:textSize="20dp"
+                android:textColor="@color/colorDarkGray" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chartMonthlyBudgetChart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/chart_min_height"
+                android:layout_marginBottom="50dp"
+                />
+
+
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>

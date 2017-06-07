@@ -3,8 +3,10 @@ package at.sw2017.financesolution.helper;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import at.sw2017.financesolution.models.Category;
+import at.sw2017.financesolution.models.Reminder;
 import at.sw2017.financesolution.models.Transaction;
 
 /**
@@ -13,19 +15,37 @@ import at.sw2017.financesolution.models.Transaction;
 
 public interface FinanceDataConnector {
 
+    boolean clearDatabaseContent();
+
     long createCategory(Category category);
 
+    long updateCategory(Category category);
+
     long createTransaction(Transaction transaction);
+
+    long updateTransaction(Transaction transaction);
+
+    long createReminder(Reminder reminder);
+
+    long updateReminder(Reminder reminder);
 
     ArrayList<Transaction> getAllTransactions();
 
     ArrayList<Category> getAllCategories();
 
+    ArrayList<Reminder> getAllReminders();
+
     void createInitialCategories();
 
-    // void addTransaction(Transaction transaction);
+    boolean removeTransaction(Transaction transaction);
 
-    void removeTransaction(Transaction transaction);
+    void removeReminder(Reminder reminder);
+
+    Transaction getTransaction(long transaction_id);
+
+    Reminder getReminder(long reminder_id);
+
+    Category getCategory(long category_id);
 
     ArrayList<Transaction> getLastTransactions(int number);
 
@@ -34,5 +54,9 @@ public interface FinanceDataConnector {
     String convertDateToDBDate(Date date);
 
     // void setDatadirectory(String dataDir);
+
+    Map<String, Float> getSpendingPerCategoryForCurrentMonth();
+
+    Map<String, Float> getSpendingPerCategoryForCurrentYear();
 
 }

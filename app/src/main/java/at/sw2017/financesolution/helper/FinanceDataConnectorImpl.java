@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -12,10 +13,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import at.sw2017.financesolution.models.Category;
+import at.sw2017.financesolution.models.Reminder;
 import at.sw2017.financesolution.models.Transaction;
 
 public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements FinanceDataConnector {
@@ -24,7 +29,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     private static final String LOG = "FinanceDataConnector";
 
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 5;
 
     // Database Name
     private static final String DATABASE_NAME = "FinanceDB";
@@ -32,6 +37,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     // Table Names
     private static final String TABLE_TRANSACTIONS = "Transactions";
     private static final String TABLE_CATEGORIES = "Categories";
+    private static final String TABLE_REMINDERS = "Reminders";
 
     // Common column names
     private static final String KEY_ID = "id";
@@ -44,13 +50,14 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     private static final String KEY_AMOUNT = "amount";
     private static final String KEY_DATE = "date";
     private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_PHOTO_PATH = "photo";
 
-    private String dataDirectory = "";
+    // REMINDER Table - column names
+    private static final String KEY_REMINDER_AMOUNT = "amount";
+    private static final String KEY_REMINDER_DATE = "date";
+    private static final String KEY_REMINDER_TITLE = "title";
+    
 
-    public void setDatadirectory(String dataDir)
-    {
-        this.dataDirectory = dataDir;
-    }
     // CREATE TABLE t(x INTEGER, y, z, PRIMARY KEY(x ASC));
     private String createStatementCategory = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORIES + "(" +
     KEY_ID + " INTEGER, " + KEY_NAME + " TEXT, PRIMARY KEY(" + KEY_ID + " ASC));";
@@ -61,11 +68,23 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             KEY_DATE + " TEXT, " +
             KEY_AMOUNT + " DECIMAL(10,5), " +
             KEY_DESCRIPTION + " TEXT, " +
+            KEY_PHOTO_PATH + " TEXT, "  +
             "PRIMARY KEY(" + KEY_ID + " ASC), " +
             " FOREIGN KEY ("+KEY_CATEGORY_ID+") REFERENCES Categories("+ KEY_ID + "));";
 
+    private String createStatementReminder = "CREATE TABLE IF NOT EXISTS "+ TABLE_REMINDERS + "(" +
+            KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            KEY_REMINDER_DATE + " TEXT, " +
+            KEY_REMINDER_AMOUNT + " DECIMAL(10,5), " +
+            KEY_REMINDER_TITLE + " TEXT); ";/* +
+            "PRIMARY KEY(" + KEY_ID + " ASC));";*/
 
-    private SQLiteDatabase database;
+
+    // Delete table content statements
+    private String deleteTransactionsContent = "DELETE FROM " + TABLE_TRANSACTIONS + ";";
+    private String deleteCategoriesContent = "DELETE FROM " + TABLE_CATEGORIES + ";";
+    private String deleteRemindersContent = "DELETE FROM " + TABLE_REMINDERS + ";";
+
 
     private static FinanceDataConnector instance;
 
@@ -78,9 +97,6 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         new Category("Clothing", 5),
         new Category("Entertainment", 6),
         new Category("Hobbies", 7));
-
-
-
 
 
     public static FinanceDataConnector getInstance(Context context) {
@@ -97,6 +113,25 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     }
 
 
+    @Override
+    public boolean clearDatabaseContent() {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(deleteTransactionsContent);
+            db.close();
+            db = this.getWritableDatabase();
+            db.execSQL(deleteCategoriesContent);
+            db.close();
+            db = this.getWritableDatabase();
+            db.execSQL(deleteRemindersContent);
+            db.close();
+        } catch (SQLiteException sqLiteException) {
+            Log.d(LOG, sqLiteException.getMessage());
+            return false;
+        }
+        return true;
+    }
+
     public long createCategory(Category category) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -109,6 +144,19 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         return category_id;
     }
 
+    @Override
+    public long updateCategory(Category category) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, category.getName());
+
+        // insert row
+        long category_id = db.update(TABLE_CATEGORIES, values, "id="+category.getDBID(), null);
+
+        return category_id;
+    }
+
     public long createTransaction(Transaction transaction) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -117,13 +165,32 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         values.put(KEY_AMOUNT, transaction.getAmount());
         values.put(KEY_DATE, convertDateToDBDate(transaction.getDate()));
         values.put(KEY_CATEGORY_ID, transaction.getCategoryID());
-
+        values.put(KEY_PHOTO_PATH, transaction.getPhotoPath());
         // insert row
         long transaction_id = db.insert(TABLE_TRANSACTIONS, null, values);
 
         return transaction_id;
     }
 
+    @Override
+    public long updateTransaction(Transaction transaction) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DESCRIPTION, transaction.getDescription());
+        values.put(KEY_AMOUNT, transaction.getAmount());
+        values.put(KEY_DATE, convertDateToDBDate(transaction.getDate()));
+        values.put(KEY_CATEGORY_ID, transaction.getCategoryID());
+        values.put(KEY_PHOTO_PATH, transaction.getPhotoPath());
+
+        // Update row
+        // https://stackoverflow.com/a/18390848
+        long transaction_id = db.update(TABLE_TRANSACTIONS, values, "id="+transaction.getId(), null);
+
+        return transaction_id;
+    }
+
+    @Override
     public Transaction getTransaction(long transaction_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -135,15 +202,22 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         if (c != null)
             c.moveToFirst();
 
+        //Category category = new Category();
+        //category = getCategory(c.getLong(c.getColumnIndex(KEY_CATEGORY_ID)));
+
         Transaction ts = new Transaction();
         ts.setId(c.getInt(c.getColumnIndex(KEY_ID)));
-        ts.setAmount(c.getInt(c.getColumnIndex(KEY_AMOUNT)));
+        ts.setDescription(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
+        ts.setAmount(c.getDouble(c.getColumnIndex(KEY_AMOUNT)));
+        //ts.setCategory(category);
         ts.setCategoryID(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
         ts.setDate(convertDBDateToDate(c.getString(c.getColumnIndex(KEY_DATE))));
+        ts.setPhotoPath(c.getString(c.getColumnIndex(KEY_PHOTO_PATH)));
 
         return ts;
     }
 
+    @Override
     public Category getCategory(long category_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -163,11 +237,8 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     }
 
     @Override
-    public void removeTransaction(Transaction transaction) {
-
-        // rawQuery("SELECT id, name FROM people WHERE name = ? AND id = ?", new String[] {"David", "2"});
-
-
+    public boolean removeTransaction(Transaction transaction) {
+        return true;
     }
 
     public Date convertDBDateToDate(String ISO8601Date)
@@ -189,9 +260,78 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     }
 
     @Override
-    public ArrayList<Transaction> getAllTransactions() {
-        //throw new UnsupportedOperationException("Not implemented.");
+    public Map<String, Float> getSpendingPerCategoryForCurrentMonth() {
 
+        Map<String, Float> spendingsInMonth = new HashMap<>();
+
+        Date date= new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int month = cal.get(Calendar.MONTH);
+
+        ArrayList<Transaction> transactions =  getTransactionsOfMonth(month);
+
+        for(int i = 0; i < transactions.size(); i++)
+        {
+            Category category = transactions.get(i).getCategory();
+
+            if(spendingsInMonth.containsKey(category.getName()))
+            {
+                Float spending = spendingsInMonth.get(category.getName());
+                Float amount = Float.valueOf((float)transactions.get(i).getAmount());
+                if (amount < 0) // if it is a spending
+                {
+                    spending += amount;
+                    spendingsInMonth.put(category.getName(),spending);
+                }
+            }
+            else
+            {
+                Float spending = Float.valueOf((float)transactions.get(i).getAmount());
+                spendingsInMonth.put(category.getName(),spending);
+            }
+        }
+
+        return spendingsInMonth;
+    }
+
+    @Override
+    public Map<String, Float> getSpendingPerCategoryForCurrentYear() {
+        Map<String, Float> spendingsInYear = new HashMap<>();
+
+        Date date= new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int year = cal.get(Calendar.YEAR);
+
+        ArrayList<Transaction> transactions =  getTransactionsOfYear(year);
+
+        for(int i = 0; i < transactions.size(); i++)
+        {
+            String category = transactions.get(i).getCategory().getName();
+
+            if(spendingsInYear.containsKey(category))
+            {
+                Float spending = spendingsInYear.get(category);
+                Float amount = Float.valueOf((float)transactions.get(i).getAmount());
+                if (amount < 0) // if it is a spending
+                {
+                    spending += amount;
+                    spendingsInYear.put(category,spending);
+                }
+            }
+            else
+            {
+                Float spending = Float.valueOf((float)transactions.get(i).getAmount());
+                spendingsInYear.put(category,spending);
+            }
+        }
+
+        return spendingsInYear;
+    }
+
+    @Override
+    public ArrayList<Transaction> getAllTransactions() {
         String selectQuery = "SELECT * FROM " + TABLE_TRANSACTIONS + ";";
         Cursor cursor = this.getReadableDatabase().rawQuery(selectQuery, null);
 
@@ -204,6 +344,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             transaction.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
             transaction.setAmount(cursor.getDouble(cursor.getColumnIndex(KEY_AMOUNT)));
             transaction.setCategoryID(cursor.getLong(cursor.getColumnIndex(KEY_CATEGORY_ID)));
+            transaction.setPhotoPath(cursor.getString(cursor.getColumnIndex(KEY_PHOTO_PATH)));
 
             Category category = getCategory(transaction.getCategoryID());
             transaction.setCategory(category);
@@ -215,9 +356,52 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         return transactionsList;
     }
 
+    public ArrayList<Transaction> getTransactionsOfMonth(int month) {
+        ArrayList<Transaction> results = new ArrayList<>();
+        ArrayList<Transaction> transactions = getAllTransactions();
+        Calendar calBefore = Calendar.getInstance();
+        Calendar calAfter  = Calendar.getInstance();
+
+        for (Transaction t : transactions) {
+            calBefore.set(Calendar.MONTH, month);
+            calBefore.set(Calendar.DAY_OF_MONTH, 1);
+            calBefore.add(Calendar.DAY_OF_MONTH, -1);
+
+            calAfter.set(Calendar.MONTH, month+1);
+            calAfter.set(Calendar.DAY_OF_MONTH, 1);
+
+            if (t.getDate().after(calBefore.getTime()) && t.getDate().before(calAfter.getTime())) {
+                results.add(t);
+            }
+        }
+        return results;
+    }
+
+    public ArrayList<Transaction> getTransactionsOfYear(int year) {
+        ArrayList<Transaction> results = new ArrayList<>();
+        ArrayList<Transaction> transactions = getAllTransactions();
+
+        Calendar calBefore = Calendar.getInstance();
+        Calendar calAfter  = Calendar.getInstance();
+
+        calBefore.set(Calendar.YEAR, year);
+        calBefore.set(Calendar.DAY_OF_YEAR, 1);
+        calBefore.add(Calendar.DAY_OF_YEAR, -1);
+
+        calAfter.set(Calendar.YEAR, year+1);
+        calAfter.set(Calendar.DAY_OF_YEAR, 1);
+
+        for (Transaction t : transactions) {
+            if (t.getDate().after(calBefore.getTime()) && t.getDate().before(calAfter.getTime())) {
+                results.add(t);
+            }
+        }
+        return results;
+    }
+
     public ArrayList<Transaction> getLastTransactions(int number) {
 
-        String selectQuery = "SELECT * FROM " + TABLE_TRANSACTIONS + " LIMIT " + number + ";";
+        String selectQuery = "SELECT * FROM " + TABLE_TRANSACTIONS + " ORDER BY " + KEY_ID + " DESC " + " LIMIT " + number + ";";
         Cursor cursor = this.getReadableDatabase().rawQuery(selectQuery, null);
 
         ArrayList<Transaction> transactionsList = new ArrayList<Transaction>();
@@ -229,6 +413,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             transaction.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
             transaction.setAmount(cursor.getDouble(cursor.getColumnIndex(KEY_AMOUNT)));
             transaction.setCategoryID(cursor.getLong(cursor.getColumnIndex(KEY_CATEGORY_ID)));
+            transaction.setPhotoPath(cursor.getString(cursor.getColumnIndex(KEY_PHOTO_PATH)));
 
             Category category = getCategory(transaction.getCategoryID());
             transaction.setCategory(category);
@@ -288,6 +473,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         // Create database tables
         db.execSQL(createStatementCategory);
         db.execSQL(createStatementTransaction);
+        db.execSQL(createStatementReminder);
     }
 
     @Override
@@ -295,13 +481,94 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         // on upgrade drop older tables
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDERS);
         // create new tables
         onCreate(db);
     }
 
+    /*
     public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())
             db.close();
+    }
+    */
+
+    @Override
+    public ArrayList<Reminder> getAllReminders() {
+        String selectQuery = "SELECT * FROM " + TABLE_REMINDERS + " ORDER BY " + KEY_REMINDER_DATE + " ASC;";
+        Cursor cursor = this.getReadableDatabase().rawQuery(selectQuery, null);
+
+        ArrayList<Reminder> reminderList = new ArrayList<Reminder>();
+        cursor.moveToNext();
+        while(!cursor.isAfterLast()) {
+            Reminder reminder = new Reminder();
+            reminder.setDate(convertDBDateToDate(cursor.getString(cursor.getColumnIndex(KEY_REMINDER_DATE))));
+            reminder.setId(cursor.getLong(cursor.getColumnIndex(KEY_ID)));
+            reminder.setTitle(cursor.getString(cursor.getColumnIndex(KEY_REMINDER_TITLE)));
+            reminder.setAmount(cursor.getDouble(cursor.getColumnIndex(KEY_REMINDER_AMOUNT)));
+
+            reminderList.add(reminder);
+            cursor.moveToNext();
+        }
+
+        return reminderList;
+    }
+
+    @Override
+    public Reminder getReminder(long reminder_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + TABLE_REMINDERS + " WHERE "
+                + KEY_ID + " = " + reminder_id;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        //Category category = new Category();
+        //category = getCategory(c.getLong(c.getColumnIndex(KEY_CATEGORY_ID)));
+
+        Reminder reminder = new Reminder();
+        reminder.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        reminder.setTitle(c.getString(c.getColumnIndex(KEY_REMINDER_TITLE)));
+        reminder.setAmount(c.getDouble(c.getColumnIndex(KEY_REMINDER_AMOUNT)));
+        reminder.setDate(convertDBDateToDate(c.getString(c.getColumnIndex(KEY_REMINDER_DATE))));
+
+        return reminder;
+    }
+
+    public long createReminder(Reminder reminder) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_REMINDER_TITLE, reminder.getTitle());
+        values.put(KEY_REMINDER_AMOUNT, reminder.getAmount());
+        values.put(KEY_REMINDER_DATE, convertDateToDBDate(reminder.getDate()));
+
+        long reminderId = db.insert(TABLE_REMINDERS, null, values);
+
+        return reminderId;
+    }
+
+    @Override
+    public long updateReminder(Reminder reminder) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_REMINDER_TITLE, reminder.getTitle());
+        values.put(KEY_REMINDER_AMOUNT, reminder.getAmount());
+        values.put(KEY_REMINDER_DATE, convertDateToDBDate(reminder.getDate()));
+
+        long transaction_id = db.update(TABLE_REMINDERS, values, "id=" + reminder.getId(), null);
+
+        return transaction_id;
+    }
+
+    @Override
+    public void removeReminder(Reminder reminder) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_REMINDERS, "id=" + reminder.getId(), null);
     }
 }

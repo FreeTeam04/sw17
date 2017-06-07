@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView android:id="@+id/row_reminder_date_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_weight="0.35"/>
+
+    <TextView
+        android:id="@+id/row_reminder_title_text_view"
+        android:width="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_weight="0.45"/>
+
+    <TextView
+        android:id="@+id/row_reminder_amount_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_weight="0.2"
+        android:gravity="right"
+        android:textStyle="bold"/>
+
+</LinearLayout>

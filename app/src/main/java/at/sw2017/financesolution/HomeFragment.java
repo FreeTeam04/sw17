@@ -3,13 +3,16 @@ package at.sw2017.financesolution;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -82,8 +85,9 @@ public class HomeFragment extends Fragment {
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 0xADD)
+        if (requestCode == 1) {
             refreshView();
+        }
     }
 
     private void refreshView() {
@@ -92,6 +96,17 @@ public class HomeFragment extends Fragment {
 
         TransactionListViewAdapter transactionListViewAdapter = new TransactionListViewAdapter(getActivity(), lastTransactionsList);
         transactionListView.setAdapter(transactionListViewAdapter);
+        transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Transaction transaction = (Transaction) parent.getItemAtPosition(position);
+                Log.i(LOG_HOME_FRAGMENT, "Going to edit Transaction (id = " + transaction.getId() + ", amount = "+ transaction.getAmount() +").");
+                Intent editTransactionIntent = new Intent(getContext(), AddTransactionActivity.class);
+                editTransactionIntent.putExtra("EDIT", transaction.getId());
+                // At this point requestcode is 0xADD, but later it should be something else like 0xED17
+                startActivityForResult(editTransactionIntent, 0xADD);
+            }
+        });
 
         ArrayList<Transaction> transactionsList = FinanceDataConnectorImpl.getInstance(getContext()).getAllTransactions();
         double balance = 0;
@@ -99,8 +114,14 @@ public class HomeFragment extends Fragment {
             balance += transaction.getAmount();
         }
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String currencySymbol = sharedPref.getString("currency_symbol", "€");
+        double budget = Double.valueOf(sharedPref.getString("budget", "0.00"));
         final TextView balanceView = (TextView) _view.findViewById(R.id.frag_home_balance);
-        balanceView.setText(balance + " €");
+
+        balanceView.setText(String.format("%.2f", balance) + " " + currencySymbol + "\nBudget: " + String.format("%.2f", budget) + " " + currencySymbol);
+
+
     }
 
     @Override
@@ -110,12 +131,12 @@ public class HomeFragment extends Fragment {
         _view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Add button event for AddTransaction button and start Add Transaction-Activity if clicked
-        final Button button = (Button) _view.findViewById(R.id.frag_home_btn_add_transaction);
+        /*final Button button = (Button) _view.findViewById(R.id.frag_home_btn_add_transaction);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivityForResult(new Intent(getContext(), AddTransactionActivity.class), 0xADD);
             }
-        });
+        });*/
 
         refreshView();
 
@@ -160,5 +181,12 @@ public class HomeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(LOG_HOME_FRAGMENT, "onResume() called.");
+        refreshView();
     }
 }
