@@ -129,16 +129,16 @@ public class AddTransactionActivityInstrumentedTest {
 
     @Test
     public void testNoAmountInput() throws Exception {
-        onView(withId(R.id.editDescription)).perform(typeText("test description"));
+        onView(withId(R.id.editDescription)).perform(typeText("test description"), closeSoftKeyboard());
         onView(withId(R.id.buttonSave)).perform(click());
         onView(withText("No amount")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 
     @Test
     public void testInvalidAmountInput() throws Exception {
-        onView(withId(R.id.editDescription)).perform(typeText("test description"));
+        onView(withId(R.id.editDescription)).perform(typeText("test description"), closeSoftKeyboard());
         onView(withId(R.id.buttonSave)).perform(click());
-        onView(withId(R.id.editAmount)).perform(typeText("."));
+        onView(withId(R.id.editAmount)).perform(typeText("."), closeSoftKeyboard());
         onView(withText("No amount")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 

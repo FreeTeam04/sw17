@@ -247,7 +247,7 @@ public class MainActivityInstrumentedTest {
 
         // 2.4  Set amount
         String amount = "25.99";
-        onView(withId(R.id.editAmount)).perform(typeText(amount));
+        onView(withId(R.id.editAmount)).perform(typeText(amount), closeSoftKeyboard());
 
         // 2.5  Click save button
         onView(withId(R.id.buttonSave)).perform(click());
@@ -297,7 +297,7 @@ public class MainActivityInstrumentedTest {
 
         // fill fields
         // description
-        onView(withId(R.id.editDescription)).perform(typeText(description));
+        onView(withId(R.id.editDescription)).perform(typeText(description), closeSoftKeyboard());
 
         // start photo and cancel
         //onView(withId(R.id.photoView)).perform(click());
@@ -308,7 +308,7 @@ public class MainActivityInstrumentedTest {
         onData(hasToString(startsWith("Entertainment"))).perform(click());
 
         // amount
-        onView(withId(R.id.editAmount)).perform(typeText(amount));
+        onView(withId(R.id.editAmount)).perform(typeText(amount), closeSoftKeyboard());
 
         // date
         onView(withId(R.id.editDate)).perform(click());
@@ -317,8 +317,8 @@ public class MainActivityInstrumentedTest {
 
 
         // goback again
-        Espresso.pressBack(); // close keyboard
         Espresso.pressBack(); // close activity
+
         // open again
         onView(allOf(isDescendantOfA(withId(R.id.floating_action_button)), Matchers.not(withId(R.id.floating_action_button_categories)),
                 Matchers.not(withId(R.id.floating_action_button_transactions)),
@@ -328,14 +328,14 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.floating_action_button_transactions)).perform(click());
 
         // description
-        onView(withId(R.id.editDescription)).perform(typeText(description));
+        onView(withId(R.id.editDescription)).perform(typeText(description), closeSoftKeyboard());
 
         // category
         onView(withId(R.id.spinnerCategory)).perform(click());
         onData(hasToString(startsWith("Entertainment"))).perform(click());
 
         // amount
-        onView(withId(R.id.editAmount)).perform(typeText(amount));
+        onView(withId(R.id.editAmount)).perform(typeText(amount), closeSoftKeyboard());
 
         // date
         onView(withId(R.id.editDate)).perform(click());
@@ -357,7 +357,7 @@ public class MainActivityInstrumentedTest {
         onView(withId(R.id.editDate)).check(matches(withText(expectedDate)));
 
         // update description
-        onView(withId(R.id.editDescription)).perform(typeText(newDescription));
+        onView(withId(R.id.editDescription)).perform(typeText(newDescription), closeSoftKeyboard());
         onView(withId(R.id.buttonSave)).perform(click());
 
     }

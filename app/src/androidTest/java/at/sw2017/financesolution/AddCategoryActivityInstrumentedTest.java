@@ -98,38 +98,5 @@ public class AddCategoryActivityInstrumentedTest {
         assertEquals(TEXT,categories.get(categories.size() - 1).getName());
     }
 
-    @Test
-    public void testCategoryEdit() throws Exception {
-        final String TEXT = "testcategory1";
-        final String TEXT2 = "testcategory2";
-
-        // write description text
-        onView(withId(R.id.editName))
-                .perform(typeText(TEXT), closeSoftKeyboard());
-        onView(withId(R.id.buttonSave)).perform(click());
-
-        Context appContext = mActivityRule.getActivity().getApplicationContext();
-        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
-        FinanceDataConnectorImpl fdcl = (FinanceDataConnectorImpl)fdc;
-        ArrayList<Category> categories = fdcl.getAllCategories();
-
-        assertEquals(TEXT,categories.get(categories.size() - 1).getName());
-
-        Intent editTransactionIntent = new Intent(appContext, AddTransactionActivity.class);
-        editTransactionIntent.putExtra("EDIT", categories.get(categories.size() - 1).getDBID());
-        mActivityRule.launchActivity(editTransactionIntent);
-
-        onView(withId(R.id.editName))
-                .check(matches(withText(TEXT)));
-
-        onView(withId(R.id.editName))
-                .perform(typeText(TEXT2), closeSoftKeyboard());
-
-        onView(withId(R.id.buttonSave)).perform(click());
-
-        categories = fdcl.getAllCategories();
-        assertEquals(TEXT + TEXT2,categories.get(categories.size() - 1).getName());
-
-    }
 }
 
