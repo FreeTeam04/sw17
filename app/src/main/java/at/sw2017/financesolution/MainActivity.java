@@ -136,16 +136,18 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode) {
-            case ADD_REMINDER_ACTIVITY:
-                Toast.makeText(this, "Reminder was added.", Toast.LENGTH_LONG).show();
-                break;
-            case ADD_CATEGORY_ACTIVITY:
-                Toast.makeText(this, "Category was added.", Toast.LENGTH_LONG).show();
-                break;
-            case ADD_TRANSACTION_ACTIVITY:
-                Toast.makeText(this, "Transaction was added.", Toast.LENGTH_LONG).show();
-                break;
+        if (resultCode == RESULT_OK){
+            switch(requestCode) {
+                case ADD_REMINDER_ACTIVITY:
+                    Toast.makeText(this, "Reminder was added.", Toast.LENGTH_LONG).show();
+                    break;
+                case ADD_CATEGORY_ACTIVITY:
+                    Toast.makeText(this, "Category was added.", Toast.LENGTH_LONG).show();
+                    break;
+                case ADD_TRANSACTION_ACTIVITY:
+                    Toast.makeText(this, "Transaction was added.", Toast.LENGTH_LONG).show();
+                    break;
+            }
         }
     }
 }

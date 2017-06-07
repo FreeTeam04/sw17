@@ -533,7 +533,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         Reminder reminder = new Reminder();
         reminder.setId(c.getInt(c.getColumnIndex(KEY_ID)));
         reminder.setTitle(c.getString(c.getColumnIndex(KEY_REMINDER_TITLE)));
-        reminder.setAmount(c.getInt(c.getColumnIndex(KEY_REMINDER_AMOUNT)));
+        reminder.setAmount(c.getDouble(c.getColumnIndex(KEY_REMINDER_AMOUNT)));
         reminder.setDate(convertDBDateToDate(c.getString(c.getColumnIndex(KEY_REMINDER_DATE))));
 
         return reminder;

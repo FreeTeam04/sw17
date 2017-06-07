@@ -130,7 +130,7 @@ public class AddCategoryActivity extends AppCompatActivity {
             long id = dataConnector.createCategory(category);
             Log.i(LOG_ADD_CATEGORY, "Added new Category (id = " + id + ").");
         }
-
+        setResult(RESULT_OK);
         this.finish();
     }
 
