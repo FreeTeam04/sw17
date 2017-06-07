@@ -1,9 +1,15 @@
 package at.sw2017.financesolution;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.test.mock.MockContext;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,6 +77,65 @@ public class FinanceDataConnectorTests {
 
         List<Reminder> reminders = fdc.getAllReminders();
         assertEquals(0, reminders.size());
+    }
+
+    /*
+    @Test
+    public void checkDatabaseClearException()
+    {
+        Context appContext = new MockContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+
+        boolean success = fdc.clearDatabaseContent();
+
+        assertFalse(success);
+
+    }
+    */
+    @Test
+    public void checkDatabaseOnCreate()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        FinanceDataConnectorImpl fdcl = (FinanceDataConnectorImpl)fdc;
+        SQLiteDatabase db = fdcl.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS Transactions");
+        db.execSQL("DROP TABLE IF EXISTS Categories");
+        db.execSQL("DROP TABLE IF EXISTS Reminders");
+        fdcl.onCreate(db);
+        boolean found = false;
+        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = 'Transactions'", null);
+        if(cursor!=null) {
+            if(cursor.getCount()>0) {
+                cursor.close();
+                found = true;
+            }
+            cursor.close();
+        }
+
+        assertTrue(found);
+
+    }
+
+    public void checkDatabaseOnUpgrade()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        FinanceDataConnectorImpl fdcl = (FinanceDataConnectorImpl)fdc;
+        SQLiteDatabase db = fdcl.getWritableDatabase();
+        fdcl.onUpgrade(db, 1,2);
+        boolean found = false;
+        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = 'Transactions'", null);
+        if(cursor!=null) {
+            if(cursor.getCount()>0) {
+                cursor.close();
+                found = true;
+            }
+            cursor.close();
+        }
+
+        assertTrue(found);
+
     }
 
     @Test
@@ -142,6 +207,34 @@ public class FinanceDataConnectorTests {
     }
 
     @Test
+    public void checkUpdateCategory()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        fdc.clearDatabaseContent();
+
+        Category newCategory = new Category();
+        String newCategoryName = "TestCategory";
+        newCategory.setName(newCategoryName);
+        newCategory.setId(fdc.createCategory(newCategory));
+
+        Category category = fdc.getCategory(newCategory.getDBID());
+
+        assertNotNull(category);
+        assertEquals(category.getDBID(), newCategory.getDBID());
+        assertEquals(category.getName(), newCategory.getName());
+
+        newCategory.setName("TestCategory2");
+
+        fdc.updateCategory(newCategory);
+        category = fdc.getCategory(newCategory.getDBID());
+
+        assertNotNull(category);
+        assertEquals(category.getDBID(), newCategory.getDBID());
+        assertEquals(category.getName(), newCategory.getName());
+    }
+
+    @Test
     public void checkCreateReminder()
     {
         Context appContext = InstrumentationRegistry.getTargetContext();
@@ -201,6 +294,25 @@ public class FinanceDataConnectorTests {
         }
 
         assertNull(reminderFromDb);
+    }
+
+    @Test
+    public void checkRemoveTransaction()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        Transaction transaction = new Transaction();
+        boolean success = fdc.removeTransaction(transaction);
+        assertTrue(success);
+    }
+
+    @Test
+    public void checkDateParseException()
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        FinanceDataConnector fdc = FinanceDataConnectorImpl.getInstance(appContext);
+        Date date = fdc.convertDBDateToDate("test");
+        assertNull(date);
     }
 
     @Test

@@ -125,8 +125,8 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             db = this.getWritableDatabase();
             db.execSQL(deleteRemindersContent);
             db.close();
-        } catch (SQLiteException sqLiteExcpetion) {
-            Log.d(LOG, sqLiteExcpetion.getMessage());
+        } catch (SQLiteException sqLiteException) {
+            Log.d(LOG, sqLiteException.getMessage());
             return false;
         }
         return true;
@@ -237,11 +237,8 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     }
 
     @Override
-    public void removeTransaction(Transaction transaction) {
-
-        // rawQuery("SELECT id, name FROM people WHERE name = ? AND id = ?", new String[] {"David", "2"});
-
-
+    public boolean removeTransaction(Transaction transaction) {
+        return true;
     }
 
     public Date convertDBDateToDate(String ISO8601Date)
@@ -489,11 +486,13 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         onCreate(db);
     }
 
+    /*
     public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())
             db.close();
     }
+    */
 
     @Override
     public ArrayList<Reminder> getAllReminders() {

@@ -37,9 +37,7 @@ public interface FinanceDataConnector {
 
     void createInitialCategories();
 
-    // void addTransaction(Transaction transaction);
-
-    void removeTransaction(Transaction transaction);
+    boolean removeTransaction(Transaction transaction);
 
     void removeReminder(Reminder reminder);
 

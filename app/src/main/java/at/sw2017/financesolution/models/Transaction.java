@@ -15,6 +15,7 @@ public class Transaction {
     {
     }
 
+    /*
     public Transaction(Date date, Category category, String description, double amount, String photoPath) {
         this.creationDate = date;
         this.category = category;
@@ -22,6 +23,7 @@ public class Transaction {
         this.amount = amount;
         this.photoPath = photoPath;
     }
+    */
 
     public void setPhotoPath(String photoPath) {this.photoPath = photoPath;}
 
