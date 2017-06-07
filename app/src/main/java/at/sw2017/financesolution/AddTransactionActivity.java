@@ -376,7 +376,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             long id = dataConnector.createTransaction(transaction);
             Log.i(LOG_ADD_TRANSACTION, "Added new Transaction (id = " + id + ").");
         }
-
+        setResult(RESULT_OK);
         this.finish();
     }
 
@@ -410,7 +410,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             }
             photoUri = null;
         }
-
+        setResult(RESULT_CANCELED);
         super.onBackPressed();
     }
 

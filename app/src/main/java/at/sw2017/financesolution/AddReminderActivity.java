@@ -183,6 +183,8 @@ public class AddReminderActivity extends AppCompatActivity implements DatePicker
 
         manageAlarm(reminder, updateReminder, false);
 
+        setResult(RESULT_OK);
+
         this.finish();
     }
 
