@@ -2,6 +2,7 @@ package at.sw2017.financesolution;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,6 +38,7 @@ public class TransactionFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String LOG_TRANSACTION_FRAGMENT = "TransactionFragment";
 
     private FinanceDataConnector financeDataConnector;
 
@@ -87,6 +90,16 @@ public class TransactionFragment extends Fragment {
 
         transactionListViewAdapter = new TransactionListViewAdapter(getActivity(), transactionList);
         transactionListView.setAdapter(transactionListViewAdapter);
+        transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+               @Override
+               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                   Transaction transaction = (Transaction) parent.getItemAtPosition(position);
+                   Log.i(LOG_TRANSACTION_FRAGMENT, "Going to edit Transaction (id = " + transaction.getId() + ", amount = " + transaction.getAmount() + ").");
+                   Intent editTransactionIntent = new Intent(getContext(), AddTransactionActivity.class);
+                   editTransactionIntent.putExtra("EDIT", transaction.getId());
+                   startActivity(editTransactionIntent);
+               }
+           });
 
         transactionSearchField = (EditText) fragmentView.findViewById(R.id.transaction_search_field);
 
