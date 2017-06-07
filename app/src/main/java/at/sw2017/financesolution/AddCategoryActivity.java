@@ -49,7 +49,6 @@ public class AddCategoryActivity extends AppCompatActivity {
 
     private final static String LOG_ADD_CATEGORY = "CreateCategory";
 
-    private TextView textHeader;
     private EditText textName;
 
     private FinanceDataConnector dataConnector = null;
@@ -61,31 +60,10 @@ public class AddCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_category);
 
-        textHeader = (TextView) findViewById(R.id.add_category_header);
         textName = (EditText) findViewById(R.id.editName);
 
         dataConnector = FinanceDataConnectorImpl.getInstance(getApplicationContext());
-
-        // checking if we are going to edit transaction
         currentCategory = null;
-        Bundle b = getIntent().getExtras();
-        if(b != null) {
-            long category_id = b.getLong("EDIT");
-            currentCategory = dataConnector.getCategory(category_id);
-
-            if(currentCategory != null) {
-                textHeader.setText("Edit Category");
-
-                String name = currentCategory.getName();
-
-                // Initializing activity elements
-                textName.setText(name);
-
-                Log.i(LOG_ADD_CATEGORY, "Editing Category (id = " + category_id + ")");
-            }
-
-        }
-
 
         // add button event for save button
         final Button saveButton = (Button) findViewById(R.id.buttonSave);
@@ -95,27 +73,12 @@ public class AddCategoryActivity extends AppCompatActivity {
                 makeCategory();
             }
         });
-
     }
 
     private void makeCategory() {
         Category category = new Category();
-        Boolean updateCategory = false;
-
-        // Checking if we are editing transaction
-        Bundle b = getIntent().getExtras();
-        if(b != null) {
-            long category_id = b.getLong("EDIT");
-            Category currentCategory = dataConnector.getCategory(category_id);
-
-            if(currentCategory != null) {
-                category = currentCategory;
-                updateCategory = true;
-            }
-        }
 
         // check if fields are filled
-
         if(textName.getText().toString().isEmpty()){
             Toast.makeText(AddCategoryActivity.this, "No name", Toast.LENGTH_LONG).show();
             return;
@@ -123,13 +86,9 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         category.setName(textName.getText().toString());
 
-        if(updateCategory) {
-            long id = dataConnector.updateCategory(category);
-            Log.i(LOG_ADD_CATEGORY, "Edited Category (id = "+ category.getDBID() +")");
-        } else {
-            long id = dataConnector.createCategory(category);
-            Log.i(LOG_ADD_CATEGORY, "Added new Category (id = " + id + ").");
-        }
+        long id = dataConnector.createCategory(category);
+        Log.i(LOG_ADD_CATEGORY, "Added new Category (id = " + id + ").");
+
         setResult(RESULT_OK);
         this.finish();
     }
