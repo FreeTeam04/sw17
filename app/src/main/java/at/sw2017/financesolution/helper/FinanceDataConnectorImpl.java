@@ -144,6 +144,19 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
         return category_id;
     }
 
+    @Override
+    public long updateCategory(Category category) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, category.getName());
+
+        // insert row
+        long category_id = db.update(TABLE_CATEGORIES, values, "id="+category.getDBID(), null);
+
+        return category_id;
+    }
+
     public long createTransaction(Transaction transaction) {
         SQLiteDatabase db = this.getWritableDatabase();
 

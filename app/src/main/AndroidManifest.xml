@@ -32,6 +32,9 @@
             android:name=".AddTransactionActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
+            android:name=".AddCategoryActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".AddReminderActivity"
             android:label="@string/title_activity_add_reminder"
             android:parentActivityName=".MainActivity"

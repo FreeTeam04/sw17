@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment {
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 0xADD) {
+        if (requestCode == 1) {
             refreshView();
         }
     }

@@ -21,7 +21,9 @@ public class MainActivity extends AppCompatActivity
         TransactionFragment.OnFragmentInteractionListener,
         ReportsFragment.OnFragmentInteractionListener {
 
+    private static final int ADD_TRANSACTION_ACTIVITY = 1;
     private static final int ADD_REMINDER_ACTIVITY = 2;
+    private static final int ADD_CATEGORY_ACTIVITY = 3;
 
     private ViewPager viewPager;
     private com.github.clans.fab.FloatingActionMenu floatingActionButton;
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddTransactionActivity.class);
-                startActivityForResult(intent, 0xADD);
+                startActivityForResult(intent, ADD_TRANSACTION_ACTIVITY);
             }
         });
 
@@ -68,9 +70,8 @@ public class MainActivity extends AppCompatActivity
         floatingActionButtonCategories.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: create AddCategoryActivity
-                /*Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);
-                startActivityForResult(intent, 0xADD);*/
+                Intent intent = new Intent(MainActivity.this, AddCategoryActivity.class);
+                startActivityForResult(intent, ADD_CATEGORY_ACTIVITY);
             }
         });
 
@@ -135,8 +136,16 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == ADD_REMINDER_ACTIVITY) {
-            Toast.makeText(this, "Reminder was added.", Toast.LENGTH_LONG).show();
+        switch(requestCode) {
+            case ADD_REMINDER_ACTIVITY:
+                Toast.makeText(this, "Reminder was added.", Toast.LENGTH_LONG).show();
+                break;
+            case ADD_CATEGORY_ACTIVITY:
+                Toast.makeText(this, "Category was added.", Toast.LENGTH_LONG).show();
+                break;
+            case ADD_TRANSACTION_ACTIVITY:
+                Toast.makeText(this, "Transaction was added.", Toast.LENGTH_LONG).show();
+                break;
         }
     }
 }

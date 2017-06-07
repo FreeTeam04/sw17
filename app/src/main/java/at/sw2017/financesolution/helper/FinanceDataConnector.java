@@ -19,6 +19,8 @@ public interface FinanceDataConnector {
 
     long createCategory(Category category);
 
+    long updateCategory(Category category);
+
     long createTransaction(Transaction transaction);
 
     long updateTransaction(Transaction transaction);
