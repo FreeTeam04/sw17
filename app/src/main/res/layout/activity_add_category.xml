@@ -9,21 +9,19 @@
 
     <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
 
-    <LinearLayout
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:layout_width="0px"
-        android:layout_height="0px"/>
-
-    <TextView
-        android:id="@+id/add_category_header"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp"
-        android:text="@string/add_category_text"
-        android:textColor="@color/colorWhite"></TextView>
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

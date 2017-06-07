@@ -20,6 +20,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -75,7 +76,11 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_transaction);
 
-        textHeader = (TextView) findViewById(R.id.add_transaction_header);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Add Transaction");
+        setSupportActionBar(toolbar);
+
+
         textDescription = (EditText) findViewById(R.id.editDescription);
         textAmount = (EditText) findViewById(R.id.editAmount);
         textDate = (TextView) findViewById(R.id.editDate);
@@ -104,7 +109,7 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
             Transaction currentTransaction = dataConnector.getTransaction(transaction_id);
 
             if(currentTransaction != null) {
-                textHeader.setText("Edit Transaction");
+                toolbar.setTitle("Edit Transaction");
 
                 Category category = new Category();
                 category = dataConnector.getCategory(currentTransaction.getCategoryID());
@@ -138,7 +143,6 @@ public class AddTransactionActivity extends AppCompatActivity implements DatePic
 
                 Log.i(LOG_ADD_TRANSACTION, "Editing Transaction (id = " + transaction_id + ")");
             }
-
         }
 
         // set Date label

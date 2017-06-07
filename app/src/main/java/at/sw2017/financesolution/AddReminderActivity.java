@@ -53,6 +53,7 @@ public class AddReminderActivity extends AppCompatActivity implements DatePicker
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reminder);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Add Reminder");
         setSupportActionBar(toolbar);
 
         dataConnector = FinanceDataConnectorImpl.getInstance(getApplicationContext());
@@ -91,6 +92,7 @@ public class AddReminderActivity extends AppCompatActivity implements DatePicker
             bDelete.setVisibility(View.INVISIBLE);
         }
         else {
+            toolbar.setTitle("Edit Reminder");
             final long reminderId = b.getLong("EDIT");
             final Reminder reminder = dataConnector.getReminder(reminderId);
 

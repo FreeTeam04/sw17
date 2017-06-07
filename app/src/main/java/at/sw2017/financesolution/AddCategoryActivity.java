@@ -20,6 +20,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -61,7 +62,11 @@ public class AddCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_category);
 
-        textHeader = (TextView) findViewById(R.id.add_category_header);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Add Category");
+        setSupportActionBar(toolbar);
+
+        //textHeader = (TextView) findViewById(R.id.add_category_header);
         textName = (EditText) findViewById(R.id.editName);
 
         dataConnector = FinanceDataConnectorImpl.getInstance(getApplicationContext());
@@ -74,8 +79,8 @@ public class AddCategoryActivity extends AppCompatActivity {
             currentCategory = dataConnector.getCategory(category_id);
 
             if(currentCategory != null) {
-                textHeader.setText("Edit Category");
-
+                //textHeader.setText("Edit Category");
+                toolbar.setTitle("Edit Category");
                 String name = currentCategory.getName();
 
                 // Initializing activity elements
