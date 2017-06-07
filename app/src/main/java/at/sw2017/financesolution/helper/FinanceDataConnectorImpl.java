@@ -29,7 +29,7 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
     private static final String LOG = "FinanceDataConnector";
 
     // Database Version
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     // Database Name
     private static final String DATABASE_NAME = "FinanceDB";
@@ -73,11 +73,11 @@ public class FinanceDataConnectorImpl extends SQLiteOpenHelper implements Financ
             " FOREIGN KEY ("+KEY_CATEGORY_ID+") REFERENCES Categories("+ KEY_ID + "));";
 
     private String createStatementReminder = "CREATE TABLE IF NOT EXISTS "+ TABLE_REMINDERS + "(" +
-            KEY_ID + " INTEGER, " +
+            KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             KEY_REMINDER_DATE + " TEXT, " +
             KEY_REMINDER_AMOUNT + " DECIMAL(10,5), " +
-            KEY_REMINDER_TITLE + " TEXT, " +
-            "PRIMARY KEY(" + KEY_ID + " ASC));";
+            KEY_REMINDER_TITLE + " TEXT); ";/* +
+            "PRIMARY KEY(" + KEY_ID + " ASC));";*/
 
 
     // Delete table content statements

@@ -1,12 +1,17 @@
 package at.sw2017.financesolution;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -79,7 +84,7 @@ public class AddReminderActivity extends AppCompatActivity implements DatePicker
         eTime.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(Calendar.getInstance().getTime()));
 
         bDelete = (Button) findViewById(R.id.button_delete_reminder);
-        bDelete.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+        bDelete.getBackground().setColorFilter(0xDFDF0044, PorterDuff.Mode.MULTIPLY);
 
         final Bundle b = getIntent().getExtras();
         if(b == null) {
@@ -161,33 +166,58 @@ public class AddReminderActivity extends AppCompatActivity implements DatePicker
         reminder.setTitle(eTitle.getText().toString());
         reminder.setAmount(amount);
 
-        Calendar now = Calendar.getInstance();
-
-        int hour = now.get(Calendar.HOUR_OF_DAY);
-        int min = now.get(Calendar.MINUTE);
-        int sec = now.get(Calendar.SECOND);
-
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, min);
-        calendar.set(Calendar.SECOND, sec);
-
         Date reminderDate = calendar.getTime();
 
         reminder.setDate(reminderDate);
 
+        long id;
+
         if(updateReminder) {
-            long id = dataConnector.updateReminder(reminder);
+            id = dataConnector.updateReminder(reminder);
         }
         else {
-            long id = dataConnector.createReminder(reminder);
+            id = dataConnector.createReminder(reminder);
         }
+
+        reminder.setId(id);
+
+        manageAlarm(reminder, updateReminder, false);
 
         this.finish();
     }
 
     private void deleteReminder(Reminder reminder) {
         dataConnector.removeReminder(reminder);
+        manageAlarm(reminder, false, true);
         this.finish();
+    }
+
+    private void manageAlarm(Reminder reminder, boolean updateReminder, boolean deleteReminder) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Intent intentAlarm = new Intent(this, AlarmReceiver.class);
+        intentAlarm.putExtra("REMINDER_TITLE", reminder.getTitle());
+        intentAlarm.putExtra("REMINDER_ID", reminder.getId());
+
+        int intentId = (int) reminder.getId();
+
+        PendingIntent pendingIntent;
+
+        if(updateReminder || deleteReminder) {
+            pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), intentId, intentAlarm, PendingIntent.FLAG_ONE_SHOT);
+            pendingIntent.cancel();
+            alarmManager.cancel(pendingIntent);
+        }
+
+        pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), intentId, intentAlarm, PendingIntent.FLAG_ONE_SHOT);
+
+        if(!deleteReminder) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminder.getDate().getTime(), pendingIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, reminder.getDate().getTime(), pendingIntent);
+            }
+        }
     }
 
     public static class DatePickerFragment extends DialogFragment {
