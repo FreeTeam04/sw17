@@ -69,7 +69,7 @@ class ReminderListViewAdapter extends BaseAdapter {
         Reminder currentReminder = this.filteredReminderList.get(position);
         txtReminderDate.setText(DateFormat.getDateInstance().format(currentReminder.getDate()));
         txtReminderTitle.setText(currentReminder.getTitle());
-        txtReminderAmount.setText(String.valueOf(currentReminder.getAmount()));
+        txtReminderAmount.setText(String.format("%.2f", currentReminder.getAmount()));
 
         return convertView;
     }

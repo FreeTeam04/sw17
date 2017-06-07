@@ -6,8 +6,8 @@
     <TextView android:id="@+id/row_reminder_date_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:layout_weight="0.35"/>
 
     <TextView
@@ -15,16 +15,18 @@
         android:width="0dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:layout_weight="0.45"/>
 
     <TextView
         android:id="@+id/row_reminder_amount_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:layout_weight="0.2"/>
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_weight="0.2"
+        android:gravity="right"
+        android:textStyle="bold"/>
 
 </LinearLayout>

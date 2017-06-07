@@ -74,7 +74,7 @@ public class TransactionListViewAdapter extends BaseAdapter {
         txtTransactionDate.setText(DateFormat.getDateInstance().format(currentTransaction.getDate()));
         txtTransactionCategory.setText(currentTransaction.getCategory().getName());
         txtTransactionDescription.setText(currentTransaction.getDescription());
-        txtTransactionAmount.setText(String.valueOf(currentTransaction.getAmount()));
+        txtTransactionAmount.setText(String.format("%.2f", currentTransaction.getAmount()));
 
         return convertView;
     }

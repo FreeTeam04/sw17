@@ -12,47 +12,60 @@
         android:text="14.04.2017"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:layout_weight="0.25"/>
 
-    <View    android:layout_width="1dp"
+    <!--<View    android:layout_width="1dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorListViewDivider" />
+        android:background="@color/colorListViewDivider" />-->
 
-    <TextView
-        android:id="@+id/row_category_text_view"
-        android:width="0dp"
-        android:text="Food"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_weight="0.3"/>
+        android:layout_weight="0.75"
+        android:orientation="vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp">
 
-    <View    android:layout_width="1dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorListViewDivider" />
+        <TextView
+            android:id="@+id/row_description_text_view"
+            android:text="Spar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="0.3"
+            android:textStyle="bold"/>
 
-    <TextView
-        android:id="@+id/row_description_text_view"
-        android:text="Spar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_weight="0.3"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <View    android:layout_width="1dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorListViewDivider" />
+            <TextView
+                android:id="@+id/row_category_text_view"
+                android:width="0dp"
+                android:text="Food"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="0.7"/>
 
-    <TextView
-        android:id="@+id/row_amount_text_view"
-        android:text="-38.39€"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_weight="0.2"/>
+            <TextView
+                android:id="@+id/row_amount_text_view"
+                android:text="-38.39€"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="0.3"
+                android:textStyle="bold"
+                android:gravity="right"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
